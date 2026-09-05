@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#020403">
-<title>PHANTASMA // PROTOCOLO FINAL // V65</title>
-<!-- PHANTASMA V65 // VISUAL NOVO + FOTO FALLBACK -->
+<title>PHANTASMA // PROTOCOLO FINAL // V72</title>
+<!-- PHANTASMA V72 // TRANSIÇÃO ENTRE FASES SEM TEXTO -->
 
 <style>
 :root{
@@ -276,6 +276,20 @@ button{font:inherit;-webkit-tap-highlight-color:transparent}
   line-height:1;font-weight:760;letter-spacing:-.06em;text-shadow:none;
 }
 
+/* V72 // TRANSIÇÃO SILENCIOSA ENTRE FASES */
+.phase-fade{
+  position:absolute;
+  inset:0;
+  z-index:89;
+  pointer-events:none;
+  background:#020302;
+  opacity:0;
+  transition:opacity .42s cubic-bezier(.2,.75,.2,1);
+}
+.phase-fade.show{
+  opacity:1;
+}
+
 /* TRANSIÇÃO ENTRE FASES — sem Matrix */
 .hack{
   position:absolute;inset:0;z-index:90;
@@ -369,6 +383,7 @@ button{font:inherit;-webkit-tap-highlight-color:transparent}
   <section class="arena" id="arena" aria-label="Área do teste">
     <div class="banner" id="banner"></div>
     <div class="flash" id="flash"></div>
+    <div class="phase-fade" id="phaseFade" aria-hidden="true"></div>
 
     <div class="hack" id="hack" aria-hidden="true">
       <div class="matrix-layer" id="matrixLayer"></div>
@@ -464,10 +479,6 @@ button{font:inherit;-webkit-tap-highlight-color:transparent}
 <script>
 "use strict";
 
-const SITE_ROOT = location.hostname.endsWith("github.io")
-  ? "/arquivoconfidencial/"
-  : "../";
-
 /*
   MOTOR DA V62
   Baseado na lógica do jogo fornecido pela autora.
@@ -480,7 +491,7 @@ const START_TIME = Math.max(
 );
 const TOTAL_TIME = START_TIME;
 const MAX_RESTARTS = 2;
-const REVEAL_URL = SITE_ROOT + "anuncio.html";
+const REVEAL_URL = "../anuncio.html";
 
 const FAVORITE_WEIGHTS = [1.8,2.0,2.5,4.5];
 
@@ -608,6 +619,7 @@ const timeHud=document.getElementById("timeHud");
 const progressBar=document.getElementById("progressBar");
 const banner=document.getElementById("banner");
 const flash=document.getElementById("flash");
+const phaseFade=document.getElementById("phaseFade");
 
 const hack=document.getElementById("hack");
 const matrixLayer=document.getElementById("matrixLayer");
@@ -836,6 +848,33 @@ function playHack(message,callback,duration=2300){
   },duration);
 }
 
+/* V72 // entre fases: apenas fade preto, sem provocação/card */
+function silentPhaseTransition(callback){
+  running=false;
+  transition=true;
+  phaseFade.classList.add("show");
+  phaseFade.setAttribute("aria-hidden","false");
+
+  setTimeout(()=>{
+    if(callback) callback();
+
+    requestAnimationFrame(()=>{
+      phaseFade.classList.remove("show");
+      phaseFade.setAttribute("aria-hidden","true");
+    });
+  },460);
+
+  setTimeout(()=>{
+    transition=false;
+    running=true;
+    spawnAccumulator=0;
+
+    if(targets.length===0){
+      spawnTarget(true);
+    }
+  },930);
+}
+
 /* UI */
 function showBanner(text,ms=1250){
   banner.textContent=text;
@@ -868,7 +907,7 @@ function clearTargets(){
 
 /* entry */
 if(!favoriteId){
-  location.replace(SITE_ROOT + "tiro.html");
+  location.replace("../tiro.html");
 }else{
   const fav=getCharacter(favoriteId);
   briefingProtectedName.textContent=fav.name.toUpperCase();
@@ -1118,18 +1157,11 @@ phaseContinueBtn.addEventListener("click",()=>{
   resetPhaseHits();
   updateHud();
 
-  const intro=PHASES[phaseIndex].intro;
-
-  playHack(
-    `> ${intro.toUpperCase()}`,
-    ()=>{
-      running=true;
-      transition=false;
-      spawnAccumulator=0;
-      spawnTarget(true);
-    },
-    TIMING.trocaDeFase
-  );
+  /* V72: nenhuma provocação/loading entre fases.
+     O jogador vê apenas um fade curto e volta direto ao teste. */
+  silentPhaseTransition(()=>{
+    updateHud();
+  });
 });
 
 function handleFavoriteLoss(fav){

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>PHANTASMA // PAINEL // V71</title>
+<title>PHANTASMA // PAINEL // V72</title>
 <style>
 :root{--bg:#040605;--panel:#080c09;--line:rgba(218,236,224,.10);--fg:#e8eee9;--muted:#707b73;--g:#8fd2a6;--r:#d96f78;--a:#c9b77f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#020302;color:var(--fg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -130,14 +130,40 @@ function winRound(){
   state.wins++;save();updatePips();answer.disabled=true;feedback.textContent="CORRETO.";feedback.className="feedback good";
   setTimeout(()=>state.wins>=3?finish():draw(),800)
 }
+function clearWrongAnswer(){
+  answer.value="";
+  requestAnimationFrame(()=>answer.focus());
+}
+
 function wrong(){
-  state.errors++;save();feedback.textContent="INCORRETO.";feedback.className="feedback bad";
-  if(state.level===1&&state.errors>=3){setTimeout(()=>showOffer(2),380);return}
-  if(state.level===2&&state.errors>=3){setTimeout(()=>showOffer(3),380);return}
-  if(state.level===3&&state.errors>=3&&!state.lastChance){
-    state.lastChance=true;state.errors=0;save();feedback.textContent="ÚLTIMA CHANCE.";feedback.className="feedback warn";return
+  state.errors++;
+  save();
+  clearWrongAnswer();
+  feedback.textContent="INCORRETO.";
+  feedback.className="feedback bad";
+
+  if(state.level===1&&state.errors>=3){
+    setTimeout(()=>showOffer(2),380);
+    return;
   }
-  if(state.level===3&&state.lastChance&&state.errors>=1){loseRound()}
+
+  if(state.level===2&&state.errors>=3){
+    setTimeout(()=>showOffer(3),380);
+    return;
+  }
+
+  if(state.level===3&&state.errors>=3&&!state.lastChance){
+    state.lastChance=true;
+    state.errors=0;
+    save();
+    feedback.textContent="ÚLTIMA CHANCE.";
+    feedback.className="feedback warn";
+    return;
+  }
+
+  if(state.level===3&&state.lastChance&&state.errors>=1){
+    loseRound();
+  }
 }
 form.onsubmit=e=>{
   e.preventDefault();const r=current(),v=answer.value.trim();if(!v)return;
@@ -145,14 +171,25 @@ form.onsubmit=e=>{
   if(correct(r,v)){winRound();return}
   if(norm(v)==="phantasma"){
     const lines=["Eu? Tentativa interessante.","Você me vê em todo lugar agora?","Adorável. Mas não.","Quase lisonjeiro."];
-    feedback.textContent=lines[(Math.random()*lines.length)|0];feedback.className="feedback warn";state.errors++;save();
+    feedback.textContent=lines[(Math.random()*lines.length)|0];
+    feedback.className="feedback warn";
+    state.errors++;
+    save();
+    clearWrongAnswer();
+
     if(state.level===1&&state.errors>=3)setTimeout(()=>showOffer(2),380);
     else if(state.level===2&&state.errors>=3)setTimeout(()=>showOffer(3),380);
-    else if(state.level===3&&state.errors>=3&&!state.lastChance){state.lastChance=true;state.errors=0;save();setTimeout(()=>{feedback.textContent="ÚLTIMA CHANCE.";},280)}
+    else if(state.level===3&&state.errors>=3&&!state.lastChance){
+      state.lastChance=true;
+      state.errors=0;
+      save();
+      setTimeout(()=>{feedback.textContent="ÚLTIMA CHANCE.";},280);
+    }
     else if(state.level===3&&state.lastChance&&state.errors>=1)loseRound();
     return
   }
-  wrong();answer.select()
+
+  wrong();
 };
 function finish(){
   if(state.finished)return;state.finished=true;save();
