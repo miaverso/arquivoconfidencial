@@ -3,211 +3,1165 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>PHANTASMA // PAINEL // V72</title>
+<meta name="theme-color" content="#030604">
+<title>Painel de Pistas // PHANTASMA // V74 MIA</title>
 <style>
-:root{--bg:#040605;--panel:#080c09;--line:rgba(218,236,224,.10);--fg:#e8eee9;--muted:#707b73;--g:#8fd2a6;--r:#d96f78;--a:#c9b77f}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#020302;color:var(--fg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-body{min-height:100dvh;display:grid;place-items:center;padding:16px;background:radial-gradient(circle at 50% 0,rgba(83,121,96,.10),transparent 36%),linear-gradient(#060906,#020302 75%)}
-.wrap{width:min(900px,100%)}.top{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:12px;color:#647068;font-size:10px;letter-spacing:.14em}
-.pips{display:flex;gap:7px}.pip{width:7px;height:7px;border-radius:50%;border:1px solid #526158}.pip.on{background:var(--g);border-color:var(--g);box-shadow:0 0 12px rgba(143,210,166,.28)}
-.panel{border:1px solid var(--line);background:rgba(7,11,8,.90);box-shadow:0 28px 90px rgba(0,0,0,.56);padding:clamp(20px,4vw,40px);transition:opacity .3s ease,transform .3s ease,filter .3s ease}
-.panel.switching{opacity:0;transform:translateY(7px);filter:blur(4px)}
-.panel.arrive{animation:panelArrive .5s cubic-bezier(.2,.8,.2,1) both}
-@keyframes panelArrive{from{opacity:0;transform:translateY(9px);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
-.category{color:#67736b;font-size:10px;letter-spacing:.17em;margin-bottom:10px}.clue-main{font-size:clamp(34px,7vw,70px);font-weight:680;letter-spacing:-.05em;line-height:1;margin:8px 0 24px}
-.clue-tag{color:#718078;font-size:9px;letter-spacing:.14em;margin-bottom:8px}
-.clues{display:grid;gap:8px;margin:0 0 26px}
-.clue{border-left:1px solid rgba(143,210,166,.20);padding:11px 12px;background:rgba(255,255,255,.018);color:#c8d4cc;font-size:13px;animation:clueIn .48s cubic-bezier(.2,.8,.2,1) both}
-.clue strong{color:#6f7b73;font-weight:500;margin-right:9px}
-@keyframes clueIn{from{opacity:0;transform:translateY(6px);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
-form{display:grid;grid-template-columns:1fr auto;gap:10px}input{min-width:0;border:1px solid rgba(231,240,234,.13);background:#050806;color:var(--fg);padding:13px 14px;font:inherit;outline:0}
-input:focus{border-color:rgba(143,210,166,.46)}button{appearance:none;border:1px solid rgba(143,210,166,.30);background:#050806;color:#cfe2d5;padding:12px 17px;font:600 11px/1 inherit;letter-spacing:.08em;cursor:pointer}
-button:hover{border-color:var(--g);background:rgba(143,210,166,.06)}.feedback{min-height:22px;margin-top:14px;color:#6d7971;font-size:12px}.feedback.bad{color:var(--r)}.feedback.good{color:var(--g)}.feedback.warn{color:var(--a)}
-.offer{position:fixed;inset:0;z-index:20;display:none;place-items:center;padding:18px;background:rgba(0,0,0,.76);backdrop-filter:blur(8px)}.offer.show{display:grid}.offer-card{width:min(520px,100%);border:1px solid rgba(218,236,224,.12);background:#080c09;padding:26px;box-shadow:0 30px 100px #000}
-.offer-tag{font-size:9px;letter-spacing:.15em;color:#657168}.offer-card h2{margin:10px 0 8px;font-size:clamp(25px,5vw,40px);letter-spacing:-.04em}.offer-card p{color:#8d9991;line-height:1.6}.offer-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
-.reveal{position:fixed;inset:0;z-index:25;display:none;place-items:center;background:#020302;padding:18px}.reveal.show{display:grid}.reveal div{text-align:center}.reveal small{color:#657168;letter-spacing:.14em}.reveal strong{display:block;margin-top:10px;font-size:clamp(35px,8vw,78px);letter-spacing:-.05em}
-@media(max-width:620px){body{padding:10px}.panel{padding:24px 16px}form{grid-template-columns:1fr}form button{min-height:48px}.offer-actions{grid-template-columns:1fr}.clue-main{font-size:clamp(34px,13vw,58px)}}
+:root{
+  --bg:#030604;
+  --text:#eef5f0;
+  --soft:#c6d2ca;
+  --muted:#748078;
+  --line:rgba(220,235,226,.12);
+  --line2:rgba(220,235,226,.22);
+  --red:#ff5f68;
+  --green:#7cf0a7;
+  --amber:#e7c56f;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text)}
+body{
+  min-height:100dvh;
+  overflow-x:hidden;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+}
+button,input{font:inherit}
+
+.bg{
+  position:fixed;inset:-6%;z-index:-6;
+  background:
+    linear-gradient(rgba(2,5,4,.69),rgba(2,5,4,.90)),
+    url("assets/phantasma-bg.jpg") center/cover no-repeat;
+  transform:scale(1.09);
+  animation:bgMove 25s ease-in-out infinite alternate;
+}
+@keyframes bgMove{
+  from{transform:scale(1.09) translate3d(-1.4%,-.7%,0)}
+  to{transform:scale(1.15) translate3d(1.3%,1%,0)}
+}
+#binaryBg{
+  position:fixed;inset:0;z-index:-5;pointer-events:none;
+  opacity:.12;mix-blend-mode:screen;
+}
+.grid{
+  position:fixed;inset:0;z-index:-4;pointer-events:none;opacity:.07;
+  background:
+    linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:46px 46px;
+}
+.scan{
+  position:fixed;inset:0;z-index:-3;pointer-events:none;opacity:.07;
+  background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(255,255,255,.025) 3px 4px);
+}
+.vignette{
+  position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:radial-gradient(circle at 50% 42%,transparent 0 30%,rgba(0,0,0,.22) 62%,rgba(0,0,0,.80) 100%);
+}
+#entryCurtain{
+  position:fixed;inset:0;z-index:1000;background:#020503;
+  pointer-events:none;transition:opacity .7s ease;
+}
+#entryCurtain.hide{opacity:0}
+#entryCurtain canvas{position:absolute;inset:0;width:100%;height:100%}
+.entryText{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  text-align:center;color:rgba(189,255,214,.72);letter-spacing:.22em;
+  text-transform:uppercase;font-size:10px;opacity:0;
+  animation:entryText .4s ease .25s forwards;
+}
+.entryText strong{
+  display:block;margin-top:12px;color:#edf7f0;
+  font-family:Inter,ui-sans-serif,system-ui,sans-serif;
+  font-size:clamp(26px,5vw,50px);letter-spacing:.03em;
+}
+@keyframes entryText{to{opacity:1}}
+
+#glitchFlash{
+  position:fixed;inset:0;z-index:80;pointer-events:none;opacity:0;
+  background:
+    linear-gradient(90deg,rgba(255,0,60,.13),transparent 24%,rgba(124,240,167,.10) 75%,transparent),
+    rgba(255,255,255,.025);
+}
+#glitchFlash.hit{animation:glitch .24s steps(2,end)}
+@keyframes glitch{
+  0%{opacity:0}
+  20%{opacity:.9;transform:translateX(-7px)}
+  45%{opacity:.23;transform:translateX(7px)}
+  70%{opacity:.52;transform:translateX(-2px)}
+  100%{opacity:0;transform:none}
+}
+
+.shell{
+  min-height:100dvh;display:flex;flex-direction:column;
+  padding:max(18px,env(safe-area-inset-top)) clamp(16px,4vw,52px) max(20px,env(safe-area-inset-bottom));
+}
+.topbar{
+  width:min(1240px,100%);margin:0 auto;min-height:58px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  border-bottom:1px solid var(--line);
+}
+.brand{
+  display:flex;align-items:center;gap:11px;
+  color:#dae4de;font-size:11px;letter-spacing:.20em;text-transform:uppercase;
+}
+.brand-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--red);
+  box-shadow:0 0 14px rgba(255,95,104,.55);
+}
+.status{
+  color:#738078;font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+}
+
+main{width:min(1180px,100%);margin:auto;padding:42px 0 60px}
+.stage{min-height:min(690px,77dvh);display:flex;flex-direction:column;justify-content:center}
+.category-row{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-bottom:26px}
+.category-label{color:#6f7b74;font-size:9px;letter-spacing:.18em;text-transform:uppercase}
+#category{color:#edf5f0;font-size:11px;letter-spacing:.24em;text-transform:uppercase}
+.category-line{flex:1;min-width:80px;height:1px;background:linear-gradient(90deg,var(--line2),transparent)}
+
+.title{
+  margin:0 0 13px;max-width:920px;
+  font-family:Inter,ui-sans-serif,system-ui,sans-serif;
+  font-size:clamp(32px,4.8vw,62px);
+  line-height:1.03;letter-spacing:-.04em;font-weight:720;
+}
+.subtitle{margin:0;color:rgba(201,216,207,.46);font-size:12px;line-height:1.7}
+
+.clues{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;margin-top:38px;
+}
+.clue{
+  position:relative;min-height:150px;padding:18px;border:1px solid var(--line);
+  background:linear-gradient(160deg,rgba(8,13,10,.78),rgba(4,7,5,.58));
+  overflow:hidden;transition:border-color .35s,background .35s,transform .35s,opacity .35s;
+}
+.clue::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,rgba(124,240,167,.55),transparent);opacity:.16;
+}
+.clue-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  color:#6d7972;font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+}
+.clue-state{color:#56625b}
+.clue-value{
+  min-height:80px;display:flex;align-items:flex-end;margin-top:18px;
+  font-family:Inter,ui-sans-serif,system-ui,sans-serif;
+  font-size:clamp(25px,3.5vw,43px);line-height:1.05;font-weight:680;letter-spacing:-.03em;
+}
+.clue.locked{opacity:.43;background:rgba(4,7,5,.45)}
+.clue.locked .clue-value{
+  font-family:ui-monospace,monospace;letter-spacing:.14em;color:#5f6a64;filter:blur(.8px);
+}
+.clue.unlocked{border-color:rgba(124,240,167,.25);animation:unlockClue .55s cubic-bezier(.2,.8,.2,1)}
+@keyframes unlockClue{0%{transform:translateY(10px) scale(.985);filter:brightness(1.8)}100%{transform:none;filter:none}}
+
+.answer-zone{margin-top:34px;width:min(920px,100%)}
+.answer-line{
+  display:grid;grid-template-columns:28px minmax(0,1fr) 150px;
+  gap:12px;align-items:center;border-bottom:1px solid rgba(223,236,228,.28);
+}
+.answer-line:focus-within{border-bottom-color:rgba(218,235,225,.62)}
+.prompt{color:var(--green);font-size:20px}
+#answer{
+  width:100%;height:58px;border:0;outline:0;background:transparent;
+  color:var(--text);caret-color:var(--red);font-size:16px;
+}
+#answer::placeholder{color:#5e6963}
+#answer:disabled{opacity:.55}
+#submit{
+  height:44px;border:1px solid rgba(220,235,226,.22);
+  background:#dce5df;color:#101511;cursor:pointer;
+  font-size:10px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;
+  transition:.18s;
+}
+#submit.state-correct{
+  background:var(--green);border-color:var(--green);color:#07110b;
+  box-shadow:0 0 24px rgba(124,240,167,.25);
+}
+#submit.state-wrong{
+  background:var(--red);border-color:var(--red);color:#180608;
+  box-shadow:0 0 24px rgba(255,95,104,.26);
+}
+#submit.state-final{
+  background:var(--amber);border-color:var(--amber);color:#171207;
+  box-shadow:0 0 24px rgba(231,197,111,.18);
+}
+#submit:disabled{cursor:default;opacity:.78}
+
+#reaction{
+  min-height:122px;margin-top:24px;padding:17px 0 0 26px;
+  border-top:1px solid rgba(220,235,226,.08);
+  color:var(--soft);white-space:pre-line;line-height:1.75;font-size:14px;
+}
+#reaction::before{
+  content:"PHANTASMA //";display:block;margin-bottom:9px;
+  color:#65716a;font-size:9px;letter-spacing:.20em;
+}
+#reaction:empty::after{
+  content:"uma pista. uma resposta. não complique.";color:#535f58
+}
+#reaction.bad{color:#f0b3b7}
+#reaction.good{color:#d8e8de}
+#reaction.reveal{color:#f2cf80}
+
+.meta{
+  margin-top:20px;display:flex;gap:18px;flex-wrap:wrap;
+  color:#5d6962;font-size:9px;letter-spacing:.13em;text-transform:uppercase;
+}
+.shake{animation:shake .27s linear}
+@keyframes shake{
+  20%{transform:translateX(-5px)}
+  45%{transform:translateX(4px)}
+  70%{transform:translateX(-2px)}
+  90%{transform:translateX(2px)}
+}
+
+#penaltyModal{
+  position:fixed;inset:0;z-index:1200;display:none;
+  background:rgba(1,4,2,.72);backdrop-filter:blur(5px);
+  align-items:center;justify-content:center;padding:20px;
+}
+#penaltyModal.show{display:flex}
+.penalty-card{
+  width:min(760px,100%);padding:26px 24px 24px;
+  border:1px solid rgba(220,235,226,.14);
+  background:linear-gradient(180deg,rgba(6,10,7,.98),rgba(3,6,4,.98));
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
+}
+.penalty-kicker{
+  color:var(--red);font-size:10px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:16px;
+}
+.penalty-title{
+  margin:0;
+  font-family:Inter,ui-sans-serif,system-ui,sans-serif;
+  font-size:clamp(28px,4vw,48px);line-height:1.06;letter-spacing:-.04em;font-weight:720;
+}
+.penalty-body{
+  margin-top:18px;color:#d9e4dd;white-space:pre-line;
+  line-height:1.8;font-size:14px;
+}
+.penalty-cost{
+  margin-top:18px;padding-top:16px;border-top:1px solid rgba(220,235,226,.08);
+  color:#89e9af;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+}
+.penalty-actions{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;
+}
+.penalty-actions button{
+  min-height:46px;padding:0 18px;border:1px solid rgba(220,235,226,.18);
+  background:transparent;color:#e6f0ea;cursor:pointer;
+  letter-spacing:.10em;text-transform:uppercase;font-size:10px;font-weight:800;
+}
+#acceptPenalty{
+  background:rgba(124,240,167,.10);border-color:rgba(124,240,167,.35);color:#b7f8cf;
+}
+#declinePenalty{
+  border-color:rgba(255,95,104,.25);color:#ffc1c5;
+}
+
+#final{display:none;width:min(1180px,100%);margin:auto}
+#final.show{display:block}
+#gameView.hidden{display:none}
+.final-stage{min-height:min(690px,77dvh);display:flex;align-items:center}
+.final-inner{width:min(960px,100%)}
+.final-kicker{
+  color:var(--red);font-size:10px;letter-spacing:.24em;text-transform:uppercase;margin-bottom:22px;
+}
+#finalText{
+  font-family:Inter,ui-sans-serif,system-ui,sans-serif;
+  font-size:clamp(32px,4.7vw,60px);line-height:1.1;white-space:pre-line;
+  font-weight:680;letter-spacing:-.04em;
+}
+#finalStats{
+  margin-top:30px;color:#68756e;font-size:10px;line-height:1.95;
+  letter-spacing:.10em;text-transform:uppercase;
+}
+#nextBtn{
+  margin-top:30px;min-height:48px;padding:0 22px;
+  background:transparent;border:1px solid rgba(218,234,224,.22);
+  color:#dce6e0;cursor:pointer;letter-spacing:.12em;text-transform:uppercase;font-size:10px;
+}
+#nextMessage{margin-top:14px;color:#748078;font-size:10px;letter-spacing:.09em}
+
+@media(max-width:760px){
+  .status{display:none}
+  main{padding:30px 0 48px}
+  .stage{min-height:78dvh}
+  .clues{grid-template-columns:1fr;gap:10px}
+  .clue{min-height:102px;padding:15px}
+  .clue-value{min-height:45px;margin-top:12px;font-size:clamp(25px,8vw,38px)}
+  .answer-line{grid-template-columns:22px minmax(0,1fr)}
+  #submit{grid-column:1/-1;width:100%;height:48px;margin-top:8px}
+  #reaction{padding-left:18px;min-height:140px;font-size:13px}
+  .penalty-card{padding:22px 18px}
+  .penalty-actions{flex-direction:column}
+  .penalty-actions button{width:100%}
+}
+
+/* =========================================================
+   V55 // oferta de pista sutil
+   ========================================================= */
+#penaltyModal{
+  display:flex !important;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  background:rgba(1,4,2,.42);
+  backdrop-filter:blur(2px);
+  transition:opacity .18s ease, visibility .18s ease;
+}
+#penaltyModal.show{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+
+.penalty-card{
+  opacity:0;
+  transform:translateY(10px) scale(.992);
+  filter:blur(1.5px);
+  transition:
+    opacity .22s ease,
+    transform .22s cubic-bezier(.2,.8,.2,1),
+    filter .22s ease;
+}
+#penaltyModal.show .penalty-card{
+  opacity:1;
+  transform:none;
+  filter:none;
+}
+#penaltyModal.closing{
+  opacity:0;
+}
+#penaltyModal.closing .penalty-card{
+  opacity:0;
+  transform:translateY(-5px) scale(.996);
+}
+
+/* Só um scan curtíssimo para não entrar seco */
+body.offer-pulse::after{
+  content:"";
+  position:fixed;
+  left:0;
+  right:0;
+  top:-8%;
+  height:8%;
+  z-index:1170;
+  pointer-events:none;
+  background:linear-gradient(
+    180deg,
+    transparent,
+    rgba(124,240,167,.15),
+    rgba(255,255,255,.04),
+    transparent
+  );
+  animation:offerPulseScan .26s ease-out forwards;
+}
+@keyframes offerPulseScan{
+  from{top:-8%;opacity:.82}
+  to{top:104%;opacity:0}
+}
+
+/* Ao aceitar, a pista dá só um flicker curto */
+.clue.unlocking{
+  border-color:rgba(124,240,167,.34);
+  animation:clueDecrypt .34s steps(3,end);
+}
+.clue.unlocking .clue-value{
+  filter:blur(1px);
+  letter-spacing:.12em;
+}
+@keyframes clueDecrypt{
+  0%{transform:translateX(-2px);filter:brightness(1.45)}
+  45%{transform:translateX(2px);filter:brightness(.82)}
+  100%{transform:none;filter:none}
+}
+
+
+/* =========================================================
+   V74 // LÓGICA NOVA SOBRE O VISUAL APROVADO PELA MIA
+   Nenhum redesign. Somente suporte a cards que nascem quando
+   a pista é realmente liberada.
+   ========================================================= */
+.clues{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+.clue.dynamic-in{
+  animation:unlockClue .55s cubic-bezier(.2,.8,.2,1) both;
+}
+#gameView{
+  transition:opacity .28s ease,transform .28s ease,filter .28s ease;
+}
+#gameView.switching{
+  opacity:0;
+  transform:translateY(7px);
+  filter:blur(4px);
+}
+#final{
+  opacity:0;
+}
+#final.show{
+  display:block;
+  animation:v74FinalIn .7s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes v74FinalIn{
+  from{opacity:0;transform:translateY(8px);filter:blur(4px)}
+  to{opacity:1;transform:none;filter:none}
+}
+
 </style>
 </head>
 <body>
-<main class="wrap">
-  <div class="top"><span>PHANTASMA // PAINEL DE EVIDÊNCIAS</span><span class="pips"><i class="pip"></i><i class="pip"></i><i class="pip"></i></span></div>
-  <section class="panel" id="panel">
-    <div class="category" id="category"></div>
-    <div class="clue-tag">PISTA 1</div>
-    <div class="clue-main" id="clueMain"></div>
-    <div class="clues" id="clues"></div>
-    <form id="form"><input id="answer" autocomplete="off" placeholder="sua resposta"><button>CONFIRMAR</button></form>
-    <div class="feedback" id="feedback"></div>
-  </section>
-</main>
-<div class="offer" id="offer">
-  <div class="offer-card">
-    <div class="offer-tag">AJUDA DISPONÍVEL</div>
-    <h2 id="offerTitle">Outra pista?</h2>
-    <p id="offerText">Você pode aceitar ajuda. Eu não disse que seria gratuita.</p>
-    <div class="offer-actions"><button id="accept" type="button">ACEITAR</button><button id="decline" type="button">RECUSAR</button></div>
+<div class="bg"></div>
+<canvas id="binaryBg" aria-hidden="true"></canvas>
+<div class="grid"></div>
+<div class="scan"></div>
+<div class="vignette"></div>
+<div id="glitchFlash"></div>
+
+<div id="entryCurtain" aria-hidden="true">
+  <canvas id="entryCanvas"></canvas>
+  <div class="entryText">protocolo carregado<strong>PAINEL DE PISTAS</strong></div>
+</div>
+
+<div id="penaltyModal" aria-hidden="true">
+  <div class="penalty-card">
+    <div class="penalty-kicker">negociação de custo</div>
+    <h2 id="penaltyTitle" class="penalty-title">Você quer mais uma pista?</h2>
+    <div id="penaltyBody" class="penalty-body"></div>
+    <div class="penalty-actions">
+      <button id="acceptPenalty" type="button">ACEITAR</button>
+      <button id="declinePenalty" type="button">CONTINUAR SEM PISTA</button>
+    </div>
   </div>
 </div>
-<div class="reveal" id="reveal"><div><small id="revealTag">RESPOSTA REVELADA</small><strong id="revealAnswer"></strong></div></div>
+
+<div class="shell">
+  <header class="topbar">
+    <div class="brand"><span class="brand-dot"></span><span>PHANTASMA // PAINEL DE PISTAS</span></div>
+    <div class="status">OBSERVAÇÃO // CONTÍNUA</div>
+  </header>
+
+  <main id="gameView">
+    <section id="card" class="stage">
+      <div class="category-row">
+        <span class="category-label">categoria</span>
+        <strong id="category"></strong>
+        <span class="category-line"></span>
+      </div>
+
+      <h1 class="title">Descubra a resposta antes que eu precise fazer isso por você.</h1>
+      <p class="subtitle">Pista extra não é gentileza. É dívida.</p>
+
+      <div class="clues" id="clues"></div>
+
+      <div class="answer-zone">
+        <form id="form" class="answer-line" autocomplete="off">
+          <span class="prompt">&gt;</span>
+          <input id="answer" type="text" autocapitalize="off" spellcheck="false" placeholder="digite a resposta">
+          <button id="submit" type="submit">RESPONDER</button>
+        </form>
+
+        <div id="reaction" aria-live="polite"></div>
+
+        <div class="meta">
+          <span id="errorMeta">erros nesta rodada // 0</span>
+          <span id="totalMeta">erros acumulados // 0</span>
+          <span id="clueMeta">pistas liberadas // 1</span>
+          <span id="winsMeta">validações // 0/3</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section id="final">
+    <div class="final-stage">
+      <div class="final-inner">
+        <div class="final-kicker">painel concluído</div>
+        <div id="finalText"></div>
+        <div id="finalStats"></div>
+        <button id="nextBtn">CONTINUAR</button>
+        <div id="nextMessage"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<audio id="sfxClick" preload="auto" src="assets/sfx/click.wav"></audio>
+<audio id="sfxError" preload="auto" src="assets/sfx/erro.wav"></audio>
+<audio id="sfxAccess" preload="auto" src="assets/sfx/acesso.wav"></audio>
+
 <script>
+(() => {
 "use strict";
-const ROUNDS=[{"id":1,"category":"JUÍZES","answers":["Caspian"],"display":"CASPIAN","clues":["Rico","Estava no celeiro","Primeira morte"]},{"id":2,"category":"LUGAR","answers":["St. Tropez","St Tropez"],"display":"ST. TROPEZ","clues":["Kelissa","Lucas","Chifre"]},{"id":3,"category":"OBJETO","answers":["Cápsula"],"display":"CÁPSULA","clues":["Melissa","Chuck","Ivy Belrose"]},{"id":4,"category":"JUÍZES","answers":["JUSTITIA"],"display":"JUSTITIA","clues":["Gado","Ferro","A juíza do inferno"]},{"id":5,"category":"LUGAR // HARPIA","answers":["Red Hook","Pier"],"display":"RED HOOK / PIER","clues":["Carro","Killian","Declan"]},{"id":6,"category":"PESSOA // ABUTRE","answers":["Lana"],"display":"LANA","clues":["Cachorro","Armário","Cicatrizes"]},{"id":7,"category":"ABUTRE","answers":["Milane"],"display":"MILANE","clues":["Colo","Tempestade","Veterinário"]},{"id":8,"category":"JUÍZES","answers":["Hello Kitty","Kitty"],"display":"HELLO KITTY","clues":["Barulho","Nome","Porão"]},{"id":9,"category":"ALBATROZ","answers":["Estrela Ivy","Estrela"],"display":"ESTRELA IVY","clues":["Madrugada","Outubro","Presente"]},{"id":10,"category":"PESSOA","answers":["Reid Montgomery","Reid"],"display":"REID MONTGOMERY","clues":["Projeto","Bunny Bear","Novo Rico"]},{"id":11,"category":"OBJETO","answers":["Pen-Drive","Pendrive","Pen Drive"],"display":"PEN-DRIVE","clues":["Melissa","Encontro","Parque"]},{"id":12,"category":"PESSOA","answers":["Harry Loomis","Harry"],"display":"HARRY LOOMIS","clues":["Monstro","Segredo","Phantasma Original"]},{"id":13,"category":"PESSOA","answers":["Melissa Jang","Melissa","Mel"],"display":"MELISSA JANG","clues":["Segredo","Acidente","Sabotagem"]},{"id":14,"category":"COMIDA // ALBATROZ","answers":["Sorvete"],"display":"SORVETE","clues":["Dex","Olivia","Sabor"]},{"id":15,"category":"PESSOA","answers":["Dexter","Dex"],"display":"DEXTER","clues":["Festa","Ciúme","Incêndio"]},{"id":16,"category":"ALBATROZ","answers":["Canela","Batom"],"display":"CANELA / BATOM","clues":["Dex","Beijo","Alergia"]},{"id":17,"category":"PESSOA","answers":["Taylor Swift"],"display":"TAYLOR SWIFT","clues":["Aniversário","Feeling 22","Killian"]},{"id":18,"category":"ALBATROZ","answers":["32 tatuagens","32","trinta e duas"],"display":"32 TATUAGENS","clues":["Olivia","Quantidade","Tatuagem"]},{"id":19,"category":"ALBATROZ","answers":["schätzchen","schatzchen"],"display":"SCHÄTZCHEN","clues":["Pequeno Tesouro","Alemão","Olivia"]},{"id":20,"category":"OBJETO","answers":["Chaveiro"],"display":"CHAVEIRO","clues":["Melissa","Chuck","Acessório"]},{"id":21,"category":"PESSOA","answers":["Chuck","Charles"],"display":"CHARLES","clues":["Carro","Acidente","Phantasma"]},{"id":22,"category":"ABUTRE","answers":["Trisal","Capítulo 38","Capitulo 38","Cap 38"],"display":"TRISAL / CAPÍTULO 38","clues":["Declan","Charlotte","Killian"]},{"id":23,"category":"NOME","answers":["Monstrinho"],"display":"MONSTRINHO","clues":["Cicatriz","Apelido","Declan"]},{"id":24,"category":"COMIDA","answers":["Pizza de abacaxi","Pizza"],"display":"PIZZA DE ABACAXI","clues":["Sabor","Charlotte","Aniversário"]},{"id":25,"category":"PESSOA","answers":["Declan"],"display":"DECLAN","clues":["Parque","Eco","Pedrada"]},{"id":26,"category":"PESSOA","answers":["Ivy Belrose","Ivy"],"display":"IVY BELROSE","clues":["Dupla","Charlotte","Amiga"]},{"id":27,"category":"LUGAR","answers":["Roda gigante","Parque"],"display":"RODA GIGANTE / PARQUE","clues":["Alto","Drone","Lista"]},{"id":28,"category":"PESSOA","answers":["Phantasma"],"display":"PHANTASMA","clues":["Assassino","QR Code","Morto"]},{"id":29,"category":"ÓRGÃO","answers":["Olho"],"display":"OLHO","clues":["Vingança","Caspian","Comer"]}];
-const STATE_KEY="phantasma_painel_v70_state";
-const qs=new URLSearchParams(location.search);
-if(qs.has("reset"))sessionStorage.removeItem(STATE_KEY);
-const SITE_ROOT=location.hostname.endsWith("github.io")?"/arquivoconfidencial/":"./";
-const $=id=>document.getElementById(id);
-const category=$("category"),clueMain=$("clueMain"),clues=$("clues"),form=$("form"),answer=$("answer"),feedback=$("feedback"),
-      offer=$("offer"),offerTitle=$("offerTitle"),offerText=$("offerText"),accept=$("accept"),decline=$("decline"),
-      reveal=$("reveal"),revealAnswer=$("revealAnswer"),revealTag=$("revealTag");
-const pips=[...document.querySelectorAll(".pip")];
-function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
-function fresh(){return {deck:shuffle(ROUNDS.map(r=>r.id)),index:0,wins:0,rounds:0,current:null,level:1,errors:0,lastChance:false,extraCount:0,penalty:0,finished:false}}
-let state;try{state=JSON.parse(sessionStorage.getItem(STATE_KEY))||fresh()}catch(_){state=fresh()}
+
+const SITE_ROOT = location.hostname.endsWith("github.io")
+  ? "/arquivoconfidencial/"
+  : "./";
+const NEXT_PAGE = SITE_ROOT + "tiro.html";
+const STATE_KEY = "phantasma_painel_v74_state";
+
+const ROUNDS = [{"id":1,"category":"JUÍZES","answers":["Caspian"],"display":"CASPIAN","clues":["Rico","Estava no celeiro","Primeira morte"]},{"id":2,"category":"LUGAR","answers":["St. Tropez","St Tropez","Saint Tropez"],"display":"ST. TROPEZ","clues":["Kelissa","Lucas","Chifre"]},{"id":3,"category":"OBJETO","answers":["Cápsula","Capsula"],"display":"CÁPSULA","clues":["Melissa","Charles","Ivy Belrose"]},{"id":4,"category":"JUÍZES","answers":["JUSTITIA"],"display":"JUSTITIA","clues":["Gado","Ferro","A juíza do inferno"]},{"id":5,"category":"LUGAR // HARPIA","answers":["Red Hook","Pier"],"display":"RED HOOK / PIER","clues":["Carro","Killian","Declan"]},{"id":6,"category":"PESSOA // ABUTRE","answers":["Lana"],"display":"LANA","clues":["Cachorro","Armário","Cicatrizes"]},{"id":7,"category":"ABUTRE","answers":["Milane"],"display":"MILANE","clues":["Colo","Tempestade","Veterinário"]},{"id":8,"category":"JUÍZES","answers":["Hello Kitty","Kitty"],"display":"HELLO KITTY","clues":["Barulho","Nome","Porão"]},{"id":9,"category":"ALBATROZ","answers":["Estrela Ivy","Estrela"],"display":"ESTRELA IVY","clues":["Madrugada","Outubro","Presente"]},{"id":10,"category":"PESSOA","answers":["Reid Montgomery","Reid"],"display":"REID MONTGOMERY","clues":["Projeto","Bunny Bear","Novo Rico"]},{"id":11,"category":"OBJETO","answers":["Pen-Drive","Pendrive","Pen Drive"],"display":"PEN-DRIVE","clues":["Melissa","Encontro","Parque"]},{"id":12,"category":"PESSOA","answers":["Harry Loomis","Harry"],"display":"HARRY LOOMIS","clues":["Monstro","Segredo","Phantasma Original"]},{"id":13,"category":"PESSOA","answers":["Melissa Jang","Melissa","Mel"],"display":"MELISSA JANG","clues":["Segredo","Acidente","Sabotagem"]},{"id":14,"category":"COMIDA // ALBATROZ","answers":["Sorvete"],"display":"SORVETE","clues":["Dex","Olivia","Sabor"]},{"id":15,"category":"PESSOA","answers":["Dexter","Dex"],"display":"DEXTER","clues":["Festa","Ciúme","Incêndio"]},{"id":16,"category":"ALBATROZ","answers":["Canela","Batom"],"display":"CANELA / BATOM","clues":["Dex","Beijo","Alergia"]},{"id":17,"category":"PESSOA","answers":["Taylor Swift"],"display":"TAYLOR SWIFT","clues":["Aniversário","Feeling 22","Killian"]},{"id":18,"category":"ALBATROZ","answers":["32 tatuagens","32","trinta e duas"],"display":"32 TATUAGENS","clues":["Olivia","Quantidade","Tatuagem"]},{"id":19,"category":"ALBATROZ","answers":["schätzchen","schatzchen"],"display":"SCHÄTZCHEN","clues":["Pequeno Tesouro","Alemão","Olivia"]},{"id":20,"category":"OBJETO","answers":["Chaveiro"],"display":"CHAVEIRO","clues":["Melissa","Charles","Acessório"]},{"id":21,"category":"PESSOA","answers":["Chuck","Charles"],"display":"CHARLES","clues":["Carro","Acidente","Phantasma"]},{"id":22,"category":"ABUTRE","answers":["Trisal","Capítulo 38","Capitulo 38","Cap 38"],"display":"TRISAL / CAPÍTULO 38","clues":["Declan","Charlotte","Killian"]},{"id":23,"category":"NOME","answers":["Monstrinho"],"display":"MONSTRINHO","clues":["Cicatriz","Apelido","Declan"]},{"id":24,"category":"COMIDA","answers":["Pizza de abacaxi","Pizza"],"display":"PIZZA DE ABACAXI","clues":["Sabor","Charlotte","Aniversário"]},{"id":25,"category":"PESSOA","answers":["Declan"],"display":"DECLAN","clues":["Parque","Eco","Pedrada"]},{"id":26,"category":"PESSOA","answers":["Ivy Belrose","Ivy"],"display":"IVY BELROSE","clues":["Dupla","Charlotte","Amiga"]},{"id":27,"category":"LUGAR","answers":["Roda gigante","Parque"],"display":"RODA GIGANTE / PARQUE","clues":["Alto","Drone","Lista"]},{"id":28,"category":"PESSOA","answers":["Phantasma"],"display":"PHANTASMA","clues":["Assassino","QR Code","Morto"]},{"id":29,"category":"ÓRGÃO","answers":["Olho"],"display":"OLHO","clues":["Vingança","Caspian","Comer"]}];
+
+/* Curva global aprovada:
+   1ª pista extra -1
+   2ª -2
+   3ª -2
+   4ª -3
+   5ª -3
+   6ª -4...
+*/
+function extraCost(n){
+  return Math.floor(n/2)+1;
+}
+
+const TAUNTS = {
+  wrong:[
+    "Não.",
+    "Bonita tentativa. Quase pareceu convicção.",
+    "Você respondeu rápido demais para alguém que claramente não sabia.",
+    "Errado. Mas admiro a confiança performática.",
+    "Não é isso. Continue cavando."
+  ],
+  later:[
+    "Ainda não. Você está errando com dedicação.",
+    "A essa altura, o problema já não é falta de contexto.",
+    "Interessante como você transforma certeza em ruído.",
+    "Não é isso. Mas siga. Eu gosto de ver o esforço inútil."
+  ],
+  phantasma:[
+    "Meu nome não é chute.",
+    "Você me vê em todo lugar agora?",
+    "Não me rebaixe assim.",
+    "Quase lisonjeiro."
+  ],
+  accept2:[
+    "PISTA 02 LIBERADA.\nEspero que tenha valido a pena.",
+    "Pronto. Mais contexto. Mais dívida."
+  ],
+  accept3:[
+    "PISTA 03 LIBERADA.\nAgora não diga que eu não ajudei.",
+    "Última pista. Não desperdice."
+  ],
+  decline2:[
+    "Ótimo. Sofra por mérito próprio.",
+    "Sem custo, sem pista. Agora continue."
+  ],
+  decline3:[
+    "Perfeito. Continue no escuro.",
+    "Recusou a última pista. Corajoso ou teimoso. Tanto faz."
+  ],
+  correct1:[
+    "Uma pista. Irritantemente eficiente.",
+    "Só precisou de uma. Que desagradável.",
+    "Certo sem ajuda. Não se acostume."
+  ],
+  correct2:[
+    "Precisou da segunda pista. Ainda conta.",
+    "Certo. Com uma ajudinha, mas certo."
+  ],
+  correct3:[
+    "Três pistas. Eu praticamente desenhei.",
+    "Correto. Depois de me obrigar a liberar tudo."
+  ],
+  finalWarning:[
+    "Última chance. Na próxima eu termino por você.",
+    "Você já teve pistas suficientes. Mais um erro e acabou."
+  ],
+  reveal:[
+    "Chega.\nA resposta era {ANSWER}.",
+    "{ANSWER}.\nConsidere isso menos uma revelação e mais uma intervenção.",
+    "A resposta: {ANSWER}.\nVocê perdeu esta rodada."
+  ]
+};
+
+const $ = id => document.getElementById(id);
+const gameView = $("gameView");
+const finalView = $("final");
+const card = $("card");
+const categoryEl = $("category");
+const cluesEl = $("clues");
+const form = $("form");
+const answerInput = $("answer");
+const submit = $("submit");
+const reaction = $("reaction");
+const errorMeta = $("errorMeta");
+const totalMeta = $("totalMeta");
+const clueMeta = $("clueMeta");
+const winsMeta = $("winsMeta");
+const finalText = $("finalText");
+const finalStats = $("finalStats");
+const nextBtn = $("nextBtn");
+const nextMessage = $("nextMessage");
+const glitchFlash = $("glitchFlash");
+const sfxClick = $("sfxClick");
+const sfxError = $("sfxError");
+const sfxAccess = $("sfxAccess");
+
+const penaltyModal = $("penaltyModal");
+const penaltyTitle = $("penaltyTitle");
+const penaltyBody = $("penaltyBody");
+const acceptPenalty = $("acceptPenalty");
+const declinePenalty = $("declinePenalty");
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function fresh(){
+  return {
+    deck:shuffle(ROUNDS.map(r=>r.id)),
+    deckIndex:0,
+    currentId:null,
+    wins:0,
+    roundsPlayed:0,
+    roundErrors:0,
+    totalErrors:0,
+    clueCount:1,
+    stageErrors:0,
+    finalStageArmed:false,
+    extraCount:0,
+    penaltySeconds:0,
+    revealed:0,
+    solved1:0,
+    solved2:0,
+    solved3:0,
+    pendingUnlock:0,
+    results:[],
+    finished:false
+  };
+}
+if(new URLSearchParams(location.search).has("reset")){
+  sessionStorage.removeItem(STATE_KEY);
+}
+let state;
+try{
+  state=JSON.parse(sessionStorage.getItem(STATE_KEY)) || fresh();
+}catch(_){
+  state=fresh();
+}
+
 function save(){
   sessionStorage.setItem(STATE_KEY,JSON.stringify(state));
-  sessionStorage.setItem("phantasma_penalidade_tiro_segundos",String(state.penalty));
+  sessionStorage.setItem("phantasma_penalidade_tiro_segundos",String(state.penaltySeconds));
   sessionStorage.setItem("phantasma_pistas_extras",String(state.extraCount));
 }
-function norm(v){return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^\p{L}\p{N}]+/gu," ").trim().replace(/\s+/g," ")}
-function current(){return ROUNDS.find(r=>r.id===state.current)}
-function correct(r,v){return r.answers.some(a=>norm(a)===norm(v))}
-function updatePips(){pips.forEach((p,i)=>p.classList.toggle("on",i<state.wins))}
-function extraCost(n){return Math.floor(n/2)+1}
-let switchingRound=false;
-function draw(){
-  if(switchingRound)return;
-  if(state.wins>=3){finish();return}
-  switchingRound=true;
-  panel.classList.add("switching");
-  setTimeout(()=>{
-    if(state.index>=state.deck.length){state.deck=shuffle(ROUNDS.map(r=>r.id));state.index=0}
-    state.current=state.deck[state.index++];state.level=1;state.errors=0;state.lastChance=false;state.rounds++;save();render();
-    panel.classList.remove("switching","arrive");void panel.offsetWidth;panel.classList.add("arrive");
-    switchingRound=false;
-  },320)
+function current(){
+  return ROUNDS.find(r=>r.id===state.currentId);
 }
-function render(){
-  updatePips();const r=current();if(!r){draw();return}
-  category.textContent="CATEGORIA // "+r.category;
-  clueMain.textContent=r.clues[0];
-
-  /* V71: pista não comprada simplesmente NÃO EXISTE visualmente. */
-  const extras=[];
-  if(state.level>=2) extras.push(`<div class="clue"><strong>PISTA 2</strong>${r.clues[1]}</div>`);
-  if(state.level>=3) extras.push(`<div class="clue"><strong>PISTA 3</strong>${r.clues[2]}</div>`);
-  clues.innerHTML=extras.join("");
-
-  feedback.textContent="";feedback.className="feedback";answer.value="";answer.disabled=false;setTimeout(()=>answer.focus(),110)
+function normalize(v){
+  return String(v??"")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .trim()
+    .replace(/[.,;:!?]+$/g,"")
+    .replace(/\s+/g," ");
 }
-function showOffer(nextLevel){
-  offer.dataset.level=String(nextLevel);
-  offerTitle.textContent=nextLevel===2?"Quer outra pista?":"Ainda precisa de mais?";
-  offerText.textContent=nextLevel===2?"Você pode aceitar ajuda. Eu não disse que seria gratuita.":"Esta é a última pista disponível. A escolha continua sendo sua.";
-  offer.classList.add("show")
+function isCorrect(round,raw){
+  const n=normalize(raw);
+  return round.answers.some(a=>normalize(a)===n);
 }
-function acceptHelp(){
-  const next=Number(offer.dataset.level);offer.classList.remove("show");
-  state.extraCount++;state.penalty+=extraCost(state.extraCount);state.level=next;state.errors=0;state.lastChance=false;save();
+function safePlay(audio,vol=.1){
+  try{
+    audio.pause();
+    audio.currentTime=0;
+    audio.volume=vol;
+    audio.play().catch(()=>{});
+  }catch(_){}
+}
+function glitch(){
+  glitchFlash.classList.remove("hit");
+  void glitchFlash.offsetWidth;
+  glitchFlash.classList.add("hit");
+}
+function pick(pool){
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+function setButton(type,label){
+  submit.classList.remove("state-correct","state-wrong","state-final");
+  if(type)submit.classList.add("state-"+type);
+  submit.textContent=label||"RESPONDER";
+}
+function say(text,cls=""){
+  reaction.className=cls;
+  reaction.textContent=String(text).replaceAll("\\n","\n");
+}
+function updateMeta(){
+  errorMeta.textContent=`erros nesta rodada // ${state.roundErrors}`;
+  totalMeta.textContent=`erros acumulados // ${state.totalErrors}`;
+  clueMeta.textContent=`pistas liberadas // ${state.clueCount}`;
+  winsMeta.textContent=`validações // ${state.wins}/3`;
+}
+function disableInput(disabled){
+  answerInput.disabled=disabled;
+  submit.disabled=disabled;
+}
+function clearInput(){
+  answerInput.value="";
+  requestAnimationFrame(()=>answerInput.focus());
+}
 
-  const r=current();
-  if(next===2){
-    clues.insertAdjacentHTML("beforeend",`<div class="clue"><strong>PISTA 2</strong>${r.clues[1]}</div>`);
-  }else{
-    clues.insertAdjacentHTML("beforeend",`<div class="clue"><strong>PISTA 3</strong>${r.clues[2]}</div>`);
+/* =========================================================
+   CARDS
+   Só a pista realmente liberada existe visualmente.
+   O desenho do card é o ORIGINAL aprovado pela Mia.
+   ========================================================= */
+function createClueCard(index,value,animate=false){
+  const article=document.createElement("article");
+  article.className="clue unlocked"+(animate?" dynamic-in":"");
+  article.innerHTML=`
+    <div class="clue-head">
+      <span>PISTA 0${index+1}</span>
+      <span class="clue-state">LIBERADA</span>
+    </div>
+    <div class="clue-value"></div>
+  `;
+  article.querySelector(".clue-value").textContent=value;
+  cluesEl.appendChild(article);
+  return article;
+}
+function renderClues(){
+  const round=current();
+  cluesEl.innerHTML="";
+  for(let i=0;i<state.clueCount;i++){
+    createClueCard(i,round.clues[i],false);
   }
-  feedback.textContent="AJUDA ACEITA // custo registrado.";feedback.className="feedback warn";
-  setTimeout(()=>answer.focus(),80);
 }
-function declineHelp(){offer.classList.remove("show");state.errors=0;save();feedback.textContent="Como quiser.";feedback.className="feedback"}
-accept.onclick=acceptHelp;decline.onclick=declineHelp;
-function loseRound(){
-  const r=current();answer.disabled=true;revealTag.textContent="RESPOSTA REVELADA // RODADA NÃO VALIDADA";revealAnswer.textContent=r.display;reveal.classList.add("show");
-  setTimeout(()=>{reveal.classList.remove("show");draw()},1900)
+function appendUnlockedClue(level){
+  const round=current();
+  const index=level-1;
+  const card=createClueCard(index,"01 10 01 11",true);
+  card.classList.add("unlocking");
+
+  setTimeout(()=>{
+    card.classList.remove("unlocking");
+    card.querySelector(".clue-value").textContent=round.clues[index];
+    glitch();
+  },320);
+}
+
+function renderRound(){
+  const round=current();
+  if(!round){drawRound();return}
+
+  categoryEl.textContent=round.category;
+  renderClues();
+
+  reaction.textContent="";
+  reaction.className="";
+  answerInput.value="";
+  disableInput(false);
+  setButton(null,"RESPONDER");
+  updateMeta();
+  setTimeout(()=>answerInput.focus(),100);
+}
+
+let switching=false;
+function drawRound(){
+  if(switching)return;
+  if(state.wins>=3){
+    finish();
+    return;
+  }
+
+  switching=true;
+  gameView.classList.add("switching");
+
+  setTimeout(()=>{
+    if(state.deckIndex>=state.deck.length){
+      state.deck=shuffle(ROUNDS.map(r=>r.id));
+      state.deckIndex=0;
+    }
+
+    state.currentId=state.deck[state.deckIndex++];
+    state.roundsPlayed++;
+    state.roundErrors=0;
+    state.clueCount=1;
+    state.stageErrors=0;
+    state.finalStageArmed=false;
+    state.pendingUnlock=0;
+
+    save();
+    renderRound();
+
+    gameView.classList.remove("switching");
+    switching=false;
+  },320);
+}
+
+function openPenaltyPrompt(level){
+  state.pendingUnlock=level;
+  disableInput(true);
+
+  penaltyTitle.textContent=level===2
+    ?"Você quer mais uma pista?"
+    :"Você quer a última pista?";
+
+  penaltyBody.textContent=level===2
+    ?"Três erros. Posso liberar mais contexto.\n\nToda ajuda tem um preço."
+    :"Ainda não chegou lá.\n\nPosso liberar a última pista. O custo, naturalmente, aumenta.";
+
+  document.body.classList.remove("offer-pulse");
+  void document.body.offsetWidth;
+  document.body.classList.add("offer-pulse");
+  glitch();
+
+  setTimeout(()=>{
+    penaltyModal.classList.remove("closing");
+    penaltyModal.classList.add("show");
+    penaltyModal.setAttribute("aria-hidden","false");
+    document.body.classList.remove("offer-pulse");
+  },160);
+}
+function closePenaltyPrompt(afterClose){
+  penaltyModal.classList.add("closing");
+  setTimeout(()=>{
+    penaltyModal.classList.remove("show","closing");
+    penaltyModal.setAttribute("aria-hidden","true");
+    if(typeof afterClose==="function")afterClose();
+  },180);
+}
+function acceptClue(level){
+  state.extraCount++;
+  state.penaltySeconds+=extraCost(state.extraCount);
+  state.clueCount=level;
+  state.stageErrors=0;
+  state.finalStageArmed=false;
+  state.pendingUnlock=0;
+  save();
+
+  appendUnlockedClue(level);
+  updateMeta();
+
+  say(
+    level===2?pick(TAUNTS.accept2):pick(TAUNTS.accept3),
+    "bad"
+  );
+
+  safePlay(sfxAccess,.08);
+  disableInput(false);
+  setButton(null,"RESPONDER");
+  setTimeout(()=>answerInput.focus(),420);
+}
+function declineClue(level){
+  state.stageErrors=0;
+  state.pendingUnlock=0;
+  save();
+
+  say(
+    level===2?pick(TAUNTS.decline2):pick(TAUNTS.decline3),
+    "bad"
+  );
+
+  disableInput(false);
+  setButton(null,"RESPONDER");
+  clearInput();
+}
+
+acceptPenalty.addEventListener("click",()=>{
+  safePlay(sfxClick,.06);
+  const level=state.pendingUnlock;
+  closePenaltyPrompt(()=>acceptClue(level));
+});
+declinePenalty.addEventListener("click",()=>{
+  safePlay(sfxClick,.06);
+  const level=state.pendingUnlock;
+  closePenaltyPrompt(()=>declineClue(level));
+});
+
+function successText(){
+  if(state.clueCount===1)return pick(TAUNTS.correct1);
+  if(state.clueCount===2)return pick(TAUNTS.correct2);
+  return pick(TAUNTS.correct3);
+}
+function recordRound(solved,revealed){
+  const round=current();
+
+  state.results.push({
+    id:round.id,
+    answer:round.display,
+    errors:state.roundErrors,
+    clues:state.clueCount,
+    solved,
+    revealed
+  });
+
+  if(revealed)state.revealed++;
+  else if(state.clueCount===1)state.solved1++;
+  else if(state.clueCount===2)state.solved2++;
+  else state.solved3++;
 }
 function winRound(){
-  state.wins++;save();updatePips();answer.disabled=true;feedback.textContent="CORRETO.";feedback.className="feedback good";
-  setTimeout(()=>state.wins>=3?finish():draw(),800)
-}
-function clearWrongAnswer(){
-  answer.value="";
-  requestAnimationFrame(()=>answer.focus());
-}
-
-function wrong(){
-  state.errors++;
+  state.wins++;
+  recordRound(true,false);
   save();
-  clearWrongAnswer();
-  feedback.textContent="INCORRETO.";
-  feedback.className="feedback bad";
 
-  if(state.level===1&&state.errors>=3){
-    setTimeout(()=>showOffer(2),380);
-    return;
-  }
+  disableInput(true);
+  setButton("correct","CORRETO");
+  say(successText(),"good");
+  updateMeta();
+  safePlay(sfxAccess,.08);
 
-  if(state.level===2&&state.errors>=3){
-    setTimeout(()=>showOffer(3),380);
-    return;
-  }
-
-  if(state.level===3&&state.errors>=3&&!state.lastChance){
-    state.lastChance=true;
-    state.errors=0;
-    save();
-    feedback.textContent="ÚLTIMA CHANCE.";
-    feedback.className="feedback warn";
-    return;
-  }
-
-  if(state.level===3&&state.lastChance&&state.errors>=1){
-    loseRound();
-  }
+  setTimeout(()=>{
+    if(state.wins>=3)finish();
+    else drawRound();
+  },1500);
 }
-form.onsubmit=e=>{
-  e.preventDefault();const r=current(),v=answer.value.trim();if(!v)return;
-  /* CORRETO vem antes do easter egg: PHANTASMA é resposta real em uma rodada. */
-  if(correct(r,v)){winRound();return}
-  if(norm(v)==="phantasma"){
-    const lines=["Eu? Tentativa interessante.","Você me vê em todo lugar agora?","Adorável. Mas não.","Quase lisonjeiro."];
-    feedback.textContent=lines[(Math.random()*lines.length)|0];
-    feedback.className="feedback warn";
-    state.errors++;
-    save();
-    clearWrongAnswer();
+function revealRound(){
+  const round=current();
+  recordRound(false,true);
+  save();
 
-    if(state.level===1&&state.errors>=3)setTimeout(()=>showOffer(2),380);
-    else if(state.level===2&&state.errors>=3)setTimeout(()=>showOffer(3),380);
-    else if(state.level===3&&state.errors>=3&&!state.lastChance){
-      state.lastChance=true;
-      state.errors=0;
+  disableInput(true);
+  setButton("final","REVELADO");
+  say(
+    pick(TAUNTS.reveal).replace("{ANSWER}",round.display.toUpperCase()),
+    "reveal"
+  );
+
+  safePlay(sfxAccess,.08);
+
+  setTimeout(()=>drawRound(),2700);
+}
+function wrong(custom=""){
+  state.roundErrors++;
+  state.totalErrors++;
+  state.stageErrors++;
+  save();
+
+  clearInput();
+  updateMeta();
+  setButton("wrong","ERRO");
+  safePlay(sfxError,.07);
+  glitch();
+
+  card.classList.remove("shake");
+  void card.offsetWidth;
+  card.classList.add("shake");
+
+  if(custom){
+    say(custom,"bad");
+  }else{
+    say(
+      state.roundErrors<=3?pick(TAUNTS.wrong):pick(TAUNTS.later),
+      "bad"
+    );
+  }
+
+  if(state.clueCount===1 && state.stageErrors>=3){
+    setTimeout(()=>openPenaltyPrompt(2),430);
+    return;
+  }
+
+  if(state.clueCount===2 && state.stageErrors>=3){
+    setTimeout(()=>openPenaltyPrompt(3),430);
+    return;
+  }
+
+  if(state.clueCount===3){
+    if(!state.finalStageArmed && state.stageErrors>=3){
+      state.finalStageArmed=true;
+      state.stageErrors=0;
       save();
-      setTimeout(()=>{feedback.textContent="ÚLTIMA CHANCE.";},280);
+      say(pick(TAUNTS.finalWarning),"bad");
+      setButton("final","ÚLTIMA");
+      return;
     }
-    else if(state.level===3&&state.lastChance&&state.errors>=1)loseRound();
-    return
+
+    if(state.finalStageArmed && state.stageErrors>=1){
+      revealRound();
+      return;
+    }
+  }
+
+  setTimeout(()=>{
+    if(!answerInput.disabled){
+      if(state.finalStageArmed)setButton("final","ÚLTIMA");
+      else setButton(null,"RESPONDER");
+      answerInput.focus();
+    }
+  },720);
+}
+
+form.addEventListener("submit",e=>{
+  e.preventDefault();
+
+  const raw=answerInput.value.trim();
+  if(!raw){
+    say("Você pretende responder ou admirar o cursor?","bad");
+    setButton("wrong","VAZIO");
+    setTimeout(()=>setButton(null,"RESPONDER"),650);
+    return;
+  }
+
+  safePlay(sfxClick,.06);
+  const round=current();
+
+  /* IMPORTANTÍSSIMO:
+     primeiro verifica se PHANTASMA é a resposta correta.
+  */
+  if(isCorrect(round,raw)){
+    winRound();
+    return;
+  }
+
+  if(normalize(raw)==="phantasma"){
+    wrong(pick(TAUNTS.phantasma));
+    return;
   }
 
   wrong();
-};
+});
+
 function finish(){
-  if(state.finished)return;state.finished=true;save();
-  sessionStorage.setItem("phantasma_painel_concluido","1");
+  state.finished=true;
+  save();
+
+  sessionStorage.setItem("phantasma_painel_concluido","sim");
   sessionStorage.setItem("phantasma_painel_acertos",String(state.wins));
-  sessionStorage.setItem("phantasma_painel_rodadas",String(state.rounds));
-  revealTag.textContent="PAINEL CONCLUÍDO";revealAnswer.textContent="3 VALIDAÇÕES CONFIRMADAS";reveal.classList.add("show");
-  setTimeout(()=>location.href=SITE_ROOT+"tiro.html",1350)
+  sessionStorage.setItem("phantasma_painel_erros",String(state.totalErrors));
+  sessionStorage.setItem("phantasma_painel_1pista",String(state.solved1));
+  sessionStorage.setItem("phantasma_painel_2pistas",String(state.solved2));
+  sessionStorage.setItem("phantasma_painel_3pistas",String(state.solved3));
+  sessionStorage.setItem("phantasma_painel_reveladas",String(state.revealed));
+  sessionStorage.setItem("phantasma_painel_resultados",JSON.stringify(state.results));
+
+  gameView.classList.add("hidden");
+  finalView.classList.add("show");
+
+  let text;
+  if(state.revealed===0){
+    text="Três respostas.\nSem precisar que eu terminasse nenhuma por você.\n\nIrritantemente competente.";
+  }else if(state.revealed===1){
+    text="Três respostas válidas.\nE uma que eu precisei arrancar do caminho.\n\nQuase limpo.";
+  }else{
+    text=`Três respostas válidas.\n${state.revealed} rodadas precisaram de intervenção.\n\nPersistência também é uma qualidade.`;
+  }
+
+  finalText.textContent=text;
+  finalStats.innerHTML=
+    `VALIDAÇÕES // ${state.wins}/3<br>`+
+    `ERROS DO PAINEL // ${state.totalErrors}<br>`+
+    `RESOLVIDAS COM 1 PISTA // ${state.solved1}<br>`+
+    `RESOLVIDAS COM 2 PISTAS // ${state.solved2}<br>`+
+    `RESOLVIDAS COM 3 PISTAS // ${state.solved3}<br>`+
+    `RODADAS REVELADAS // ${state.revealed}`;
+
+  safePlay(sfxAccess,.09);
+  glitch();
 }
-if(state.finished){state=fresh();save()}
-updatePips();
-if(!state.current){
-  panel.classList.add("switching");
-  setTimeout(()=>draw(),100);
+
+nextBtn.addEventListener("click",()=>{
+  safePlay(sfxClick,.06);
+  nextBtn.disabled=true;
+  nextMessage.textContent="ABRINDO PRÓXIMO PROTOCOLO...";
+  setTimeout(()=>location.href=NEXT_PAGE,420);
+});
+
+/* =========================================================
+   FUNDO BINÁRIO ORIGINAL
+   ========================================================= */
+const binaryCanvas=$("binaryBg");
+const bctx=binaryCanvas.getContext("2d");
+let cols=[],stepX=18;
+
+function sizeBinary(){
+  const dpr=Math.min(devicePixelRatio||1,1.5);
+  binaryCanvas.width=Math.floor(innerWidth*dpr);
+  binaryCanvas.height=Math.floor(innerHeight*dpr);
+  binaryCanvas.style.width=innerWidth+"px";
+  binaryCanvas.style.height=innerHeight+"px";
+  bctx.setTransform(dpr,0,0,dpr,0,0);
+  stepX=Math.max(15,Math.min(22,innerWidth/80));
+  cols=Array.from({length:Math.ceil(innerWidth/stepX)},()=>({
+    y:Math.random()*innerHeight,
+    speed:.7+Math.random()*1.5,
+    alpha:.04+Math.random()*.11,
+    size:12+Math.random()*5
+  }));
+}
+function drawBinary(){
+  bctx.clearRect(0,0,innerWidth,innerHeight);
+  cols.forEach((c,i)=>{
+    bctx.font=`${c.size}px monospace`;
+    bctx.fillStyle=`rgba(135,255,187,${c.alpha})`;
+    bctx.fillText(Math.random()>.5?"1":"0",i*stepX,c.y);
+    c.y+=c.speed;
+    if(c.y>innerHeight+20)c.y=-20;
+  });
+  requestAnimationFrame(drawBinary);
+}
+sizeBinary();
+drawBinary();
+addEventListener("resize",sizeBinary);
+
+/* =========================================================
+   CORTINA DE ENTRADA ORIGINAL
+   ========================================================= */
+const entry=$("entryCurtain");
+const ecanvas=$("entryCanvas");
+const ectx=ecanvas.getContext("2d");
+
+function runEntry(){
+  const dpr=Math.min(devicePixelRatio||1,1.5);
+  ecanvas.width=Math.floor(innerWidth*dpr);
+  ecanvas.height=Math.floor(innerHeight*dpr);
+  ecanvas.style.width=innerWidth+"px";
+  ecanvas.style.height=innerHeight+"px";
+  ectx.setTransform(dpr,0,0,dpr,0,0);
+
+  const fs=Math.max(13,Math.min(20,innerWidth/75));
+  const streams=Array.from({length:Math.ceil(innerWidth/fs)},(_,i)=>({
+    x:i*fs,
+    y:Math.random()*innerHeight,
+    speed:10+Math.random()*16,
+    a:.18+Math.random()*.32
+  }));
+
+  let frames=0;
+  function paint(){
+    frames++;
+    ectx.fillStyle="rgba(2,5,3,.28)";
+    ectx.fillRect(0,0,innerWidth,innerHeight);
+    ectx.font=fs+"px monospace";
+
+    streams.forEach(s=>{
+      ectx.fillStyle=`rgba(130,255,184,${s.a})`;
+      ectx.fillText(Math.random()>.5?"1":"0",s.x,s.y);
+      s.y+=s.speed;
+      if(s.y>innerHeight+20)s.y=-20;
+    });
+
+    if(frames<58)requestAnimationFrame(paint);
+  }
+
+  paint();
+
+  setTimeout(()=>{
+    entry.classList.add("hide");
+    setTimeout(()=>entry.remove(),700);
+  },1150);
+}
+runEntry();
+
+/* retoma a rodada depois de reload, se houver */
+if(state.finished){
+  state=fresh();
+  save();
+}
+if(!state.currentId){
+  setTimeout(drawRound,220);
 }else{
-  render();
-  panel.classList.add("arrive");
+  renderRound();
 }
+})();
 </script>
 </body>
 </html>
