@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>PHANTASMA // PROTOCOLO FINAL // V71</title>
+<title>PHANTASMA // PROTOCOLO FINAL // V75</title>
 <style>
 :root{--bg:#030403;--panel:#080c09;--line:rgba(219,234,224,.105);--fg:#e7ede8;--muted:#727e75;--g:#8fd2a6;--r:#db7079;--a:#c9b77f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#020302;color:var(--fg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -91,6 +91,237 @@ button:hover,button:focus-visible{border-color:var(--g);background:rgba(143,210,
 .flash.go{animation:flash .52s steps(2) both}
 @keyframes flash{0%{opacity:0}12%{opacity:.88}23%{opacity:.03}36%{opacity:.55}46%{opacity:.04}63%{opacity:.28}100%{opacity:0}}
 
+
+/* V73 // gancho pós-decodificação */
+.takeover-screen{
+  width:100%;
+  min-height:calc(100dvh - 32px);
+  display:none;
+  place-items:center;
+}
+.takeover-screen.show{display:grid}
+.takeover-inner{
+  width:min(920px,90vw);
+  margin:auto;
+  text-align:center;
+}
+.takeover-kicker{
+  color:#626f67;
+  font-size:9px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  margin-bottom:28px;
+  opacity:0;
+}
+.takeover-line{
+  font-size:clamp(31px,5.6vw,62px);
+  line-height:1.08;
+  font-weight:650;
+  letter-spacing:-.045em;
+  opacity:0;
+  transform:translateY(10px);
+  filter:blur(5px);
+}
+.takeover-sub{
+  margin-top:24px;
+  color:#87938b;
+  font-size:clamp(14px,2vw,19px);
+  opacity:0;
+  transform:translateY(8px);
+}
+.takeover-screen.play .takeover-kicker{animation:moralIn .65s ease .15s both}
+.takeover-screen.play .takeover-line{animation:moralIn .9s ease .65s both}
+.takeover-screen.play .takeover-sub{animation:moralIn .75s ease 1.75s both}
+
+
+/* =========================================================
+   V75 // DECODIFICAÇÃO COM PROFUNDIDADE + TAKEOVER DO MESMO PAINEL
+   ========================================================= */
+.decode-core{
+  position:relative;
+  transition:opacity .48s ease,filter .48s ease,transform .48s ease;
+}
+.decode-core.evacuate{
+  opacity:0;
+  filter:blur(6px);
+  transform:translateY(-5px);
+  pointer-events:none;
+}
+
+.decode-diagnostics{
+  width:min(680px,88%);
+  margin:0 auto 25px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  border-top:1px solid rgba(220,235,226,.055);
+  border-bottom:1px solid rgba(220,235,226,.055);
+}
+.diag{
+  min-width:0;
+  padding:10px 13px;
+  border-right:1px solid rgba(220,235,226,.045);
+}
+.diag:last-child{border-right:0}
+.diag small{
+  display:block;
+  color:#59655e;
+  font-size:7px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.diag strong{
+  display:block;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#839087;
+  font:500 8px/1.25 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.08em;
+  transition:color .18s ease,opacity .18s ease;
+}
+.decode-shell.warning .diag strong{color:#b7a86f}
+.decode-shell.error .diag strong{color:#c9787f}
+
+.decode-title .reel{
+  transition:
+    opacity .14s ease,
+    filter .14s ease,
+    transform .14s ease,
+    margin .20s ease,
+    color .16s ease;
+}
+.decode-title .reel.offset-up{transform:translateY(-2px)}
+.decode-title .reel.offset-down{transform:translateY(2px)}
+.decode-title .reel.space-before{margin-left:clamp(3px,.7vw,9px)}
+.decode-title.corrupt .reel.frozen{
+  opacity:.18!important;
+  filter:blur(4px)!important;
+  transform:translateY(5px)!important;
+}
+.decode-title.corrupt .reel.hot{
+  color:#c9d4cd!important;
+  text-shadow:2px 0 rgba(219,112,121,.25);
+}
+
+.decode-head-label,
+#decodeLed{
+  transition:opacity .2s ease,color .2s ease,filter .2s ease;
+}
+
+.decode-shell.pre-error .decode-head-label{
+  opacity:.55;
+}
+.decode-shell.pre-error #decodeLed{
+  color:#b7a86f;
+}
+
+.decode-shell.takeover{
+  border-color:rgba(143,210,166,.18);
+  background:rgba(4,7,5,.965);
+  box-shadow:0 30px 115px rgba(0,0,0,.72),0 0 46px rgba(143,210,166,.025);
+  animation:none;
+}
+.decode-shell.takeover .head{
+  border-bottom-color:rgba(143,210,166,.075);
+}
+.decode-shell.takeover #decodeLed{
+  color:#8fd2a6;
+  letter-spacing:.18em;
+}
+.decode-shell.takeover .decode-head-label{
+  color:#77857c;
+}
+
+.decode-takeover{
+  position:absolute;
+  inset:42px 0 0;
+  z-index:8;
+  display:grid;
+  place-items:center;
+  padding:clamp(24px,5vw,56px);
+  opacity:0;
+  pointer-events:none;
+}
+.decode-takeover.show{opacity:1}
+.decode-takeover-inner{
+  width:min(840px,92%);
+  text-align:center;
+}
+.takeover-mark{
+  color:#5f6c64;
+  font-size:8px;
+  letter-spacing:.20em;
+  text-transform:uppercase;
+  margin-bottom:30px;
+  opacity:0;
+}
+.takeover-copy{
+  margin:0;
+  color:#e7eee9;
+  font-size:clamp(30px,5.25vw,58px);
+  line-height:1.08;
+  font-weight:650;
+  letter-spacing:-.045em;
+}
+.takeover-copy .line{
+  display:block;
+  opacity:0;
+  transform:translateY(10px);
+  filter:blur(5px);
+}
+.decode-takeover.show .takeover-mark{
+  animation:takeMark .7s ease .15s both;
+}
+.decode-takeover.show .line.one{
+  animation:takeLine .9s cubic-bezier(.2,.8,.2,1) .65s both;
+}
+.decode-takeover.show .line.two{
+  animation:takeLine 1s cubic-bezier(.2,.8,.2,1) 2.15s both;
+}
+@keyframes takeMark{
+  to{opacity:1}
+}
+@keyframes takeLine{
+  to{opacity:1;transform:none;filter:none}
+}
+
+/* takeover não precisa "gritar" vermelho: a invasão passa a ser tratada
+   pelo próprio sistema como um novo estado válido. */
+.decode-shell.takeover::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.09;
+  background:
+    linear-gradient(90deg,transparent,rgba(143,210,166,.08),transparent);
+  animation:ownerScan 2.8s ease-in-out infinite;
+}
+@keyframes ownerScan{
+  0%,100%{transform:translateX(-70%);opacity:0}
+  45%{opacity:.13}
+  60%{transform:translateX(70%);opacity:.04}
+}
+
+@media(max-width:640px){
+  .decode-diagnostics{
+    width:94%;
+    grid-template-columns:1fr;
+  }
+  .diag{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    border-right:0;
+    border-bottom:1px solid rgba(220,235,226,.035);
+  }
+  .diag:last-child{border-bottom:0}
+  .diag small{margin:0}
+  .takeover-copy{font-size:clamp(27px,9vw,42px)}
+}
+
 /* moral */
 .moral-screen{background:transparent}
 .moral-sequence{width:min(1020px,92vw);text-align:center}
@@ -158,17 +389,49 @@ button:hover,button:focus-visible{border-color:var(--g);background:rgba(143,210,
   <div class="log" id="bootLog"></div><div class="boot-foot">abrindo próximo estado...</div>
 </div></div></section>
 
-<section class="screen" id="decodeScreen"><div class="shell decode-shell" id="decodeShell"><div class="head"><span>ARQUIVO RECUPERADO // ACESSO RESTRITO</span><strong id="decodeLed">CANAL SEGURO</strong></div><div class="body">
-  <div class="decode-title" id="decodeTitle"></div><div class="decode-date" id="decodeDate"></div>
-  <div class="decode-status" id="decodeStatus">DECODIFICANDO...</div>
-  <div class="decode-progress"><i id="decodeFill"></i></div><div class="decode-pct" id="decodePct">0%</div>
-  <div class="log" id="decodeLog"></div>
-</div></div></section>
+<section class="screen" id="decodeScreen">
+  <div class="shell decode-shell" id="decodeShell">
+    <div class="head">
+      <span class="decode-head-label" id="decodeHeadLabel">ARQUIVO RECUPERADO // ACESSO RESTRITO</span>
+      <strong id="decodeLed">CANAL SEGURO</strong>
+    </div>
 
-<section class="screen" id="controlScreen"><div class="shell"><div class="head"><span>SESSÃO // ALTERAÇÃO DE ESTADO</span><strong>PHANTASMA</strong></div><div class="body">
-  <h1 class="big">CONTROLE ASSUMIDO.</h1><p class="copy">O arquivo não vai abrir.</p><button id="controlNext">CONTINUAR</button>
-</div></div></section>
+    <div class="body decode-core" id="decodeCore">
+      <div class="decode-title" id="decodeTitle"></div>
+      <div class="decode-date" id="decodeDate"></div>
 
+      <div class="decode-diagnostics" id="decodeDiagnostics">
+        <div class="diag">
+          <small>BLOCO</small>
+          <strong id="diagBlock">01 / 10</strong>
+        </div>
+        <div class="diag">
+          <small>ASSINATURA</small>
+          <strong id="diagSignature">ANALISANDO</strong>
+        </div>
+        <div class="diag">
+          <small>ÍNDICE</small>
+          <strong id="diagIndex">RECONSTRUINDO</strong>
+        </div>
+      </div>
+
+      <div class="decode-status" id="decodeStatus">DECODIFICANDO...</div>
+      <div class="decode-progress"><i id="decodeFill"></i></div>
+      <div class="decode-pct" id="decodePct">0%</div>
+      <div class="log" id="decodeLog"></div>
+    </div>
+
+    <div class="decode-takeover" id="decodeTakeover" aria-hidden="true">
+      <div class="decode-takeover-inner">
+        <div class="takeover-mark">SESSÃO // PROPRIETÁRIO ALTERADO</div>
+        <p class="takeover-copy">
+          <span class="line one">Você veio atrás de respostas.</span>
+          <span class="line two">Agora eu quero uma em troca.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="screen cinematic moral-screen" id="moralScreen">
   <div class="moral-sequence">
     <div class="cinematic-kicker moral-step">PHANTASMA // TESTE DE CRITÉRIO</div>
@@ -201,12 +464,7 @@ button:hover,button:focus-visible{border-color:var(--g);background:rgba(143,210,
 <section class="screen" id="rouletteScreen"><div class="shell"><div class="head"><span>SESSÃO // VARIÁVEL ADICIONAL</span><strong>SORTE</strong></div><div class="body">
   <div class="roulette-layout"><div class="wheel-wrap"><div class="pointer"></div><div class="wheel" id="wheel"></div></div>
   <div class="roulette-copy"><h2>Isso é constrangedor.</h2><p>Você conseguiu transformar sessenta segundos nisso.<br>Eu até gostaria de assistir você tentar. Mas não teria muita graça.</p><p><strong>Vamos acrescentar uma variável.</strong></p>
-  <button id="spinBtn">GIRAR</button><div id="spinResult" style="display:none"><div class="bonus" id="bonus"></div><p>Não confunda sorte com perdão.</p><button id="rouletteNext">CONTINUAR</button></div></div></div>
-</div></div></section>
-
-<section class="screen" id="readyScreen"><div class="shell"><div class="head"><span>PHANTASMA // PROTOCOLO FINAL</span><strong>PRONTO</strong></div><div class="body">
-  <h1 class="big">TESTE CONFIGURADO.</h1><div class="ready-grid"><div class="ready-item"><small>PROTEGIDO</small><strong id="readyProtected"></strong></div><div class="ready-item"><small>TEMPO INICIAL</small><strong id="readyTime"></strong></div></div>
-  <button id="gameBtn">INICIAR TESTE</button>
+  <button id="spinBtn">GIRAR</button><div id="spinResult" style="display:none"><div class="bonus" id="bonus"></div><p>Não confunda sorte com perdão.</p><button id="rouletteNext">INICIAR TESTE</button></div></div></div>
 </div></div></section>
 </main>
 <script>
@@ -279,36 +537,82 @@ const bootSteps=[
 bootSteps.forEach(([at,p,m,s,h,l,k])=>setTimeout(()=>{bootTarget=p;bootMain.textContent=m;bootSub.textContent=s;bootHead.textContent=h;log(bootLog,l,k);if(p===72)faultBurst(1);if(p===100)setTimeout(()=>{bootProgress=100;bootFill.style.width="100%";bootPct.textContent="100%";clearInterval(bootTimer);beginDecode()},1100)},at));
 /* DECODE */
 const decodeShell=$("decodeShell"),decodeTitle=$("decodeTitle"),decodeDate=$("decodeDate"),decodeStatus=$("decodeStatus"),
-decodeFill=$("decodeFill"),decodePct=$("decodePct"),decodeLog=$("decodeLog"),decodeLed=$("decodeLed");
+decodeFill=$("decodeFill"),decodePct=$("decodePct"),decodeLog=$("decodeLog"),decodeLed=$("decodeLed"),
+decodeHeadLabel=$("decodeHeadLabel"),decodeCore=$("decodeCore"),decodeTakeover=$("decodeTakeover"),
+diagBlock=$("diagBlock"),diagSignature=$("diagSignature"),diagIndex=$("diagIndex");
 const GLYPHS="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@$%&?*";
 let titleTimer=null,dateTimers=[],titleFast=false,lastLen=0;
 const LENGTHS=[5,7,8,3,10,4,9,6];
 function rndChar(){return GLYPHS[(Math.random()*GLYPHS.length)|0]}
+function diagnosticForLength(len,fast=false){
+  const block=Math.min(10,Math.max(1,Math.round((len/10)*10)));
+  diagBlock.textContent=String(block).padStart(2,"0")+" / 10";
+
+  if(len<=4){
+    diagSignature.textContent="ESTRUTURA CURTA";
+    diagIndex.textContent="REINDEXANDO";
+  }else if(len>=9){
+    diagSignature.textContent="ASSINATURA EXPANDIDA";
+    diagIndex.textContent=fast?"PRIORIZANDO":"RECALCULANDO";
+  }else if(len===5||len===6){
+    diagSignature.textContent="PADRÃO INSTÁVEL";
+    diagIndex.textContent="TESTANDO VARIANTE";
+  }else{
+    diagSignature.textContent="ASSINATURA MUTÁVEL";
+    diagIndex.textContent="RECONSTRUINDO";
+  }
+}
+
 function buildTitle(len){
   decodeTitle.classList.remove("morph");
   decodeTitle.innerHTML="";
+
   for(let i=0;i<len;i++){
-    const d=document.createElement("div");d.className="reel";
-    const s=document.createElement("span");s.textContent=rndChar();
-    d.appendChild(s);decodeTitle.appendChild(d)
+    const d=document.createElement("div");
+    d.className="reel";
+
+    /* irregularidade controlada: o campo parece reconstruído,
+       não uma fileira perfeita de caça-níqueis. */
+    if(i>0 && Math.random()>.72)d.classList.add("space-before");
+    if(Math.random()>.68)d.classList.add(Math.random()>.5?"offset-up":"offset-down");
+
+    const s=document.createElement("span");
+    s.textContent=rndChar();
+    d.appendChild(s);
+    decodeTitle.appendChild(d)
   }
-  void decodeTitle.offsetWidth;decodeTitle.classList.add("morph");
+
+  diagnosticForLength(len,titleFast);
+  void decodeTitle.offsetWidth;
+  decodeTitle.classList.add("morph");
 }
+
 function kickReel(el){
-  el.classList.remove("kick");void el.offsetWidth;
+  el.classList.remove("kick");
+  void el.offsetWidth;
   el.querySelector("span").textContent=rndChar();
   el.classList.add("kick")
 }
+
 function startTitle(fast=false){
-  titleFast=fast;clearInterval(titleTimer);lastLen=0;
+  titleFast=fast;
+  clearInterval(titleTimer);
+  lastLen=0;
+
   const morph=()=>{
     let len;
     do{len=LENGTHS[(Math.random()*LENGTHS.length)|0]}while(len===lastLen);
-    lastLen=len;buildTitle(len);
-    [...decodeTitle.children].forEach(el=>setTimeout(()=>kickReel(el),Math.random()*(fast?180:320)))
+    lastLen=len;
+
+    buildTitle(len);
+
+    [...decodeTitle.children].forEach((el,i)=>{
+      setTimeout(()=>kickReel(el),Math.random()*(fast?190:390));
+    });
   };
+
   morph();
-  titleTimer=setInterval(morph,fast?430:820);
+  titleTimer=setInterval(morph,fast?470:980);
 }
 function buildDate(fast=false){
   dateTimers.forEach(clearInterval);dateTimers=[];decodeDate.innerHTML="";
@@ -325,69 +629,213 @@ function progress(duration,done){
 }
 async function beginDecode(){
   await transitionTo("decodeScreen",80);
-  decodeStatus.textContent="DECODIFICANDO...";decodeLed.textContent="CANAL SEGURO";decodeShell.className="shell decode-shell";
-  decodeLog.innerHTML="";log(decodeLog,"[SISTEMA] estrutura recebida.","good");startTitle(false);buildDate(false);
-  setTimeout(()=>log(decodeLog,"[SISTEMA] iniciando leitura de blocos."),900);
-  progress(12000,firstFreeze)
+
+  decodeShell.className="shell decode-shell";
+  decodeCore.classList.remove("evacuate");
+  decodeTakeover.classList.remove("show");
+  decodeTakeover.setAttribute("aria-hidden","true");
+
+  decodeHeadLabel.textContent="ARQUIVO RECUPERADO // ACESSO RESTRITO";
+  decodeLed.textContent="CANAL SEGURO";
+  decodeStatus.textContent="DECODIFICANDO...";
+  decodeTitle.classList.remove("corrupt");
+  decodeDate.classList.remove("corrupt");
+
+  diagBlock.textContent="01 / 10";
+  diagSignature.textContent="ANALISANDO";
+  diagIndex.textContent="RECONSTRUINDO";
+
+  decodeLog.innerHTML="";
+  log(decodeLog,"[SISTEMA] estrutura recebida.","good");
+
+  startTitle(false);
+  buildDate(false);
+
+  setTimeout(()=>log(decodeLog,"[SISTEMA] índice reconstruído parcialmente."),1000);
+  setTimeout(()=>log(decodeLog,"[SISTEMA] assinatura permanece variável."),3300);
+  setTimeout(()=>log(decodeLog,"[SISTEMA] comparando estruturas candidatas."),6600);
+
+  progress(12800,firstFreeze)
 }
 async function firstFreeze(){
-  decodePct.textContent="99%";decodeFill.style.width="99%";decodeStatus.textContent="DECODIFICAÇÃO // 99%";decodeLed.textContent="AGUARDANDO";
+  decodePct.textContent="99%";
+  decodeFill.style.width="99%";
+  decodeStatus.textContent="DECODIFICAÇÃO // 99%";
+  decodeLed.textContent="AGUARDANDO";
+  diagBlock.textContent="10 / 10";
+  diagIndex.textContent="VALIDAÇÃO FINAL";
   log(decodeLog,"[SISTEMA] aguardando confirmação do último bloco.");
-  await wait(750);
 
-  decodeShell.classList.add("warning");
+  await wait(800);
+
+  decodeShell.classList.add("pre-error","warning");
+  decodeHeadLabel.textContent="ARQUIVO RECUPERADO // ACESSO —";
+  decodeLed.textContent="CANAL —";
+  diagSignature.textContent="INCONSISTENTE";
+  log(decodeLog,"[AVISO] assinatura alterada durante validação.","warn");
+
+  decodePct.textContent="98%";
+  decodeFill.style.width="98.2%";
+
+  /* alguns caracteres deixam de obedecer ao mesmo estado */
+  [...decodeTitle.children].forEach((el,i)=>{
+    if(i%3===0)el.classList.add("frozen");
+    else if(i%4===0)el.classList.add("hot");
+  });
   decodeTitle.classList.add("corrupt");
-  log(decodeLog,"[AVISO] latência fora do intervalo.","warn");
-  decodePct.textContent="98%";decodeFill.style.width="98.2%";
 
-  await wait(520);
+  await wait(600);
+
   decodeDate.classList.add("corrupt");
-  decodeStatus.textContent="VALIDANDO BLOCO FINAL...";
+  decodeStatus.textContent="RECALCULANDO ÍNDICE...";
+  diagIndex.textContent="REINDEXANDO";
   faultBurst(1);
 
-  await wait(620);
-  decodePct.textContent="99%";decodeFill.style.width="99%";
-  decodeStatus.textContent="SEM RESPOSTA";
+  await wait(650);
+
+  decodePct.textContent="99%";
+  decodeFill.style.width="99%";
+  decodeStatus.textContent="PROCESSO NÃO RESPONDE";
+  diagBlock.textContent="10 / —";
   log(decodeLog,"[AVISO] resposta do processo interrompida.","warn");
 
-  await wait(650);
-  systemError()
+  await wait(720);
+  systemError();
 }
 async function systemError(){
   stopReels();
-  decodeShell.classList.remove("warning");decodeShell.classList.add("error");
-  decodeTitle.classList.add("corrupt");decodeDate.classList.add("corrupt");
+
+  decodeShell.classList.remove("warning");
+  decodeShell.classList.add("error");
+  decodeTitle.classList.add("corrupt");
+  decodeDate.classList.add("corrupt");
+
+  decodeHeadLabel.textContent="SESSÃO LOCAL // PERD—";
   decodeLed.textContent="FALHA";
   decodeStatus.textContent="ERRO NO SISTEMA";
+
+  diagSignature.textContent="SEM RESPOSTA";
+  diagIndex.textContent="PROCESSO INTERROMPIDO";
   log(decodeLog,"[FALHA] bloco final não confirmou.","bad");
+
   faultBurst(3);
 
-  await wait(1550);
+  await wait(1650);
+
   decodeStatus.textContent="RECUPERANDO PROCESSO...";
+  decodeHeadLabel.textContent="SESSÃO // RECUPERAÇÃO";
+  diagIndex.textContent="ISOLANDO BLOCO";
   log(decodeLog,"[SISTEMA] isolando processo corrompido.");
 
-  await wait(1450);
+  await wait(1500);
+
   decodeStatus.textContent="REINICIANDO DECODIFICAÇÃO";
+  decodeLed.textContent="REINICIANDO";
+  diagSignature.textContent="LIMPA";
+  diagIndex.textContent="NOVA LEITURA";
   faultBurst(2);
 
-  await wait(1250);
-  decodeTitle.classList.remove("corrupt");decodeDate.classList.remove("corrupt");
-  secondDecode()
+  await wait(1300);
+
+  decodeTitle.classList.remove("corrupt");
+  decodeDate.classList.remove("corrupt");
+  [...decodeTitle.children].forEach(el=>el.classList.remove("frozen","hot"));
+
+  secondDecode();
 }
 function secondDecode(){
-  decodeShell.className="shell decode-shell";decodeTitle.classList.remove("corrupt");decodeDate.classList.remove("corrupt");
-  decodeLed.textContent="CANAL RECUPERADO";decodeStatus.textContent="DECODIFICANDO...";decodeLog.innerHTML="";
-  log(decodeLog,"[SISTEMA] sessão reconfigurada.","good");startTitle(true);buildDate(true);progress(4100,secondFreeze)
+  decodeShell.className="shell decode-shell";
+  decodeTitle.classList.remove("corrupt");
+  decodeDate.classList.remove("corrupt");
+  [...decodeTitle.children].forEach(el=>el.classList.remove("frozen","hot"));
+
+  decodeHeadLabel.textContent="ARQUIVO RECUPERADO // NOVA LEITURA";
+  decodeLed.textContent="CANAL RECUPERADO";
+  decodeStatus.textContent="DECODIFICANDO...";
+
+  diagBlock.textContent="01 / 10";
+  diagSignature.textContent="PRIORIZADA";
+  diagIndex.textContent="LEITURA RÁPIDA";
+
+  decodeLog.innerHTML="";
+  log(decodeLog,"[SISTEMA] sessão reconfigurada.","good");
+
+  startTitle(true);
+  buildDate(true);
+
+  setTimeout(()=>log(decodeLog,"[SISTEMA] pulando redundâncias."),700);
+  setTimeout(()=>log(decodeLog,"[SISTEMA] correspondência provável encontrada.","good"),1850);
+
+  progress(4300,secondFreeze)
 }
 async function secondFreeze(){
-  decodePct.textContent="99%";decodeFill.style.width="99%";decodeStatus.textContent="ARQUIVO LOCALIZADO";log(decodeLog,"[SISTEMA] referência final montada.","good");
-  await wait(800);decodeStatus.textContent="ABRINDO ARQUIVO...";decodeLed.textContent="ABRINDO";log(decodeLog,"[SISTEMA] entregando conteúdo para visualização.");
-  await wait(950);decodeShell.classList.add("warning");decodeLed.textContent="SEM RESPOSTA";log(decodeLog,"[AVISO] processo de abertura não respondeu.","warn");
-  await wait(780);stopReels();decodeShell.classList.remove("warning");decodeShell.classList.add("error");log(decodeLog,"[FALHA] controle da sessão alterado.","bad");faultBurst(2);
-  await wait(950);show("controlScreen")
+  decodePct.textContent="99%";
+  decodeFill.style.width="99%";
+  decodeStatus.textContent="ARQUIVO LOCALIZADO";
+  diagBlock.textContent="10 / 10";
+  diagSignature.textContent="CORRESPONDÊNCIA";
+  diagIndex.textContent="MONTADO";
+  log(decodeLog,"[SISTEMA] referência final montada.","good");
+
+  await wait(850);
+
+  decodeStatus.textContent="ABRINDO ARQUIVO...";
+  decodeLed.textContent="ABRINDO";
+  diagIndex.textContent="ENTREGANDO CONTEÚDO";
+  log(decodeLog,"[SISTEMA] entregando conteúdo para visualização.");
+
+  /* desta vez parece que realmente funcionou */
+  await wait(1500);
+
+  decodeShell.classList.add("pre-error");
+  decodeLed.textContent="—";
+  decodeHeadLabel.textContent="ARQUIVO RECUPERADO // —";
+  diagSignature.textContent="ALTERADA";
+  diagIndex.textContent="SEM RESPOSTA";
+  log(decodeLog,"[AVISO] processo de abertura não respondeu.","warn");
+
+  await wait(700);
+
+  stopReels();
+  decodeTitle.classList.add("corrupt");
+  decodeDate.classList.add("corrupt");
+  [...decodeTitle.children].forEach((el,i)=>{
+    if(i%2===0)el.classList.add("frozen");
+    else el.classList.add("hot");
+  });
+
+  decodeShell.classList.remove("warning");
+  decodeShell.classList.add("error");
+  decodeStatus.textContent="CONTROLE DA SESSÃO ALTERADO";
+  log(decodeLog,"[FALHA] proprietário da sessão modificado.","bad");
+
+  faultBurst(3);
+
+  await wait(1150);
+
+  /* =====================================================
+     TAKEOVER: O MESMO PAINEL MUDA DE DONO.
+     Não abre outra tela.
+     ===================================================== */
+  decodeShell.classList.remove("error","pre-error");
+  decodeShell.classList.add("takeover");
+
+  decodeHeadLabel.textContent="SESSÃO // PROPRIETÁRIO ALTERADO";
+  decodeLed.textContent="PHANTASMA";
+
+  decodeCore.classList.add("evacuate");
+
+  await wait(500);
+
+  decodeTakeover.classList.add("show");
+  decodeTakeover.setAttribute("aria-hidden","false");
+
+  /* duas frases, nenhuma interação */
+  await wait(4700);
+
+  await transitionTo("moralScreen",260);
 }
-$("controlNext").onclick=()=>show("moralScreen");
-$("chooseBtn").onclick=()=>show("choiceScreen");
+$("chooseBtn").onclick=()=>transitionTo("choiceScreen",160);
 /* CHOICE */
 const peopleGrid=$("peopleGrid"),choiceTaunt=$("choiceTaunt"),tauntA=$("tauntA"),tauntB=$("tauntB");
 const TAUNTS=[
@@ -467,10 +915,20 @@ async function showTime(){
 $("timeNext").onclick=()=>{
   if(baseTime<30){
     if(sessionStorage.getItem("phantasma_roleta_usada")==="1"){
-      const t=Number(sessionStorage.getItem("phantasma_tiro_tempo_inicial")||baseTime);showReady(t)
-    }else{prepareRoulette()}
-  }else{sessionStorage.setItem("phantasma_tiro_tempo_inicial",String(baseTime));showReady(baseTime)}
+      startShootingGame();
+    }else{
+      prepareRoulette();
+    }
+  }else{
+    sessionStorage.setItem("phantasma_tiro_tempo_inicial",String(baseTime));
+    startShootingGame();
+  }
 };
+function startShootingGame(){
+  sceneVeil.classList.add("on");
+  setTimeout(()=>location.href=SITE_ROOT+"jogo/",430);
+}
+
 /* ROULETTE */
 const wheel=$("wheel"),spinBtn=$("spinBtn"),spinResult=$("spinResult"),bonusEl=$("bonus");
 let wheelValues=[],chosenBonus=0,spun=false;
@@ -495,13 +953,7 @@ spinBtn.onclick=()=>{
     bonusEl.textContent="+"+chosenBonus+"s";spinResult.style.display="block";spinBtn.style.display="none";spinBtn.disabled=false
   },4450)
 };
-$("rouletteNext").onclick=()=>showReady(Number(sessionStorage.getItem("phantasma_tiro_tempo_inicial")||baseTime));
-async function showReady(time){
-  $("readyProtected").textContent=(sessionStorage.getItem("phantasma_protegido")||"—").toUpperCase();
-  $("readyTime").textContent=time+"s";
-  await transitionTo("readyScreen",160)
-}
-$("gameBtn").onclick=()=>location.href=SITE_ROOT+"jogo/";
+$("rouletteNext").onclick=()=>startShootingGame();
 </script>
 </body>
 </html>
