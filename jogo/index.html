@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#020403">
-<title>PHANTASMA // PROTOCOLO FINAL // V72</title>
-<!-- PHANTASMA V72 // TRANSIÇÃO ENTRE FASES SEM TEXTO -->
+<title>PHANTASMA // PROTOCOLO FINAL // V76</title>
+<!-- PHANTASMA V76 // ENTRADA ÚNICA + DERROTA NARRATIVA -->
 
 <style>
 :root{
@@ -290,6 +290,41 @@ button{font:inherit;-webkit-tap-highlight-color:transparent}
   opacity:1;
 }
 
+/* V76 // derrota narrativa */
+.defeat-panel{
+  width:min(690px,94%);
+}
+.defeat-panel .bad{
+  margin-bottom:14px;
+}
+.defeat-reveal{
+  margin-top:22px;
+  padding-top:16px;
+  border-top:1px solid rgba(220,235,226,.07);
+  color:#7f8b83!important;
+  font-size:12px;
+  letter-spacing:.035em;
+}
+.defeat-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:22px;
+}
+.action.secondary{
+  background:transparent;
+  border-color:rgba(220,235,226,.12);
+  color:#78847c;
+}
+.action.secondary:hover{
+  border-color:rgba(220,235,226,.28);
+  color:#d7e1da;
+  background:rgba(255,255,255,.025);
+}
+@media(max-width:620px){
+  .defeat-actions{grid-template-columns:1fr}
+}
+
 /* TRANSIÇÃO ENTRE FASES — sem Matrix */
 .hack{
   position:absolute;inset:0;z-index:90;
@@ -398,24 +433,6 @@ button{font:inherit;-webkit-tap-highlight-color:transparent}
       </div>
     </div>
 
-    <div class="overlay" id="briefingScreen">
-      <div class="panel">
-        <div class="small-note">CONDIÇÃO DE ACESSO // PHANTASMA</div>
-        <h2>AGORA PROVE.</h2>
-        <p>Você escolheu quem quer manter a salvo.</p>
-
-        <div class="access-cost">
-          <div class="rule">&gt; OBJETIVO: <strong>ATINJA OS OUTROS CISNES ANTES DO TEMPO ACABAR.</strong></div>
-          <div class="rule">&gt; PROTEGIDO: <span class="protected" id="briefingProtectedName">---</span></div>
-          <div class="rule">&gt; TEMPO: <strong id="briefingTime">--</strong></div>
-          <div class="rule danger">&gt; ALERTA: SEU PROTEGIDO TAMBÉM ENTRARÁ NA LINHA DE TIRO.</div>
-        </div>
-
-        <p class="small-note">Eu dei a você alguém para proteger. Não prometi facilitar.</p>
-        <button class="action" id="briefingBtn">INICIAR TESTE</button>
-      </div>
-    </div>
-
     <div class="overlay" id="countdownScreen">
       <div class="panel"><div class="countdown" id="countdownNumber">3</div></div>
     </div>
@@ -435,24 +452,6 @@ button{font:inherit;-webkit-tap-highlight-color:transparent}
       </div>
     </div>
 
-    <div class="overlay" id="favoriteLostScreen">
-      <div class="panel">
-        <div class="small-note">STATUS DO PROTEGIDO</div>
-        <h2 class="bad" id="favoriteLostTitle">PERDIDO.</h2>
-        <p id="favoriteLostLine"></p>
-        <button class="action" id="favoriteRetryBtn">ACEITAR SEGUNDA CHANCE</button>
-      </div>
-    </div>
-
-    <div class="overlay" id="timeoutScreen">
-      <div class="panel">
-        <h2 class="bad">QUE PENA.</h2>
-        <p>O tempo acabou.</p>
-        <p><strong>“Estou me sentindo caridoso hoje. Não se acostume.”</strong></p>
-        <button class="action" id="timeoutRetryBtn">ACEITAR A CARIDADE</button>
-      </div>
-    </div>
-
     <div class="overlay" id="winScreen">
       <div class="panel">
         <h2>IRRITANTE.</h2>
@@ -464,9 +463,16 @@ button{font:inherit;-webkit-tap-highlight-color:transparent}
     </div>
 
     <div class="overlay" id="lockedScreen">
-      <div class="panel">
-        <h2 class="bad">ACABOU.</h2>
+      <div class="panel defeat-panel">
+        <div class="small-note">SESSÃO // TESTE REPROVADO</div>
+        <h2 class="bad" id="defeatTitle">NÃO.</h2>
         <p id="lockedLine"></p>
+        <p class="defeat-reveal" id="defeatReveal">A revelação continua fechada.</p>
+
+        <div class="defeat-actions">
+          <button class="action" id="restartTestBtn">REINICIAR TESTE</button>
+          <button class="action secondary" id="giveUpBtn">DESISTIR DA REVELAÇÃO</button>
+        </div>
       </div>
     </div>
   </section>
@@ -480,7 +486,7 @@ button{font:inherit;-webkit-tap-highlight-color:transparent}
 "use strict";
 
 /*
-  MOTOR DA V62
+  MOTOR V76 // BASE MECÂNICA ORIGINAL
   Baseado na lógica do jogo fornecido pela autora.
 */
 
@@ -490,7 +496,6 @@ const START_TIME = Math.max(
   Number(sessionStorage.getItem("phantasma_tiro_tempo_inicial") || 60)
 );
 const TOTAL_TIME = START_TIME;
-const MAX_RESTARTS = 2;
 const REVEAL_URL = "../anuncio.html";
 
 const FAVORITE_WEIGHTS = [1.8,2.0,2.5,4.5];
@@ -628,10 +633,6 @@ const hackStatus=document.getElementById("hackStatus");
 const hackPct=document.getElementById("hackPct");
 const hackFill=document.getElementById("hackFill");
 
-const briefingScreen=document.getElementById("briefingScreen");
-const briefingProtectedName=document.getElementById("briefingProtectedName");
-const briefingTime=document.getElementById("briefingTime");
-const briefingBtn=document.getElementById("briefingBtn");
 const countdownScreen=document.getElementById("countdownScreen");
 const countdownNumber=document.getElementById("countdownNumber");
 
@@ -654,6 +655,10 @@ const finalMessage=document.getElementById("finalMessage");
 const revealBtn=document.getElementById("revealBtn");
 const lockedScreen=document.getElementById("lockedScreen");
 const lockedLine=document.getElementById("lockedLine");
+const defeatTitle=document.getElementById("defeatTitle");
+const defeatReveal=document.getElementById("defeatReveal");
+const restartTestBtn=document.getElementById("restartTestBtn");
+const giveUpBtn=document.getElementById("giveUpBtn");
 const soundToggle=document.getElementById("soundToggle");
 
 /* protected */
@@ -772,8 +777,10 @@ let arenaW=0;
 let arenaH=0;
 let phaseResultNext=null;
 
-const RESTART_KEY="phantasma_restarts_session";
-let restartCount=Number(sessionStorage.getItem(RESTART_KEY)||0);
+const ATTEMPT_KEY="phantasma_tiro_tentativas";
+const FAILURE_KEY="phantasma_tiro_falhas";
+let attemptCount=Number(sessionStorage.getItem(ATTEMPT_KEY)||0);
+let failureCount=Number(sessionStorage.getItem(FAILURE_KEY)||0);
 
 function activeCharacters(){return CHARACTERS.filter(c=>!eliminated.has(c.id))}
 function measureArena(){
@@ -905,21 +912,23 @@ function clearTargets(){
   targets=[];
 }
 
-/* entry */
+/* entry
+   A única explicação/CTA já aconteceu em tiro.html.
+   Aqui o teste começa sozinho depois de um fade curto. */
 if(!favoriteId){
   location.replace("../tiro.html");
 }else{
-  const fav=getCharacter(favoriteId);
-  briefingProtectedName.textContent=fav.name.toUpperCase();
-  briefingTime.textContent=TOTAL_TIME+"s";
   timeHud.textContent=TOTAL_TIME;
-  briefingScreen.classList.add("show");
-}
 
-briefingBtn.addEventListener("click",()=>{
-  briefingScreen.classList.remove("show");
-  playHack("> SINCRONIZANDO ALVOS...",startCountdown,1600);
-});
+  phaseFade.classList.add("show");
+  phaseFade.setAttribute("aria-hidden","false");
+
+  setTimeout(()=>{
+    startCountdown();
+    phaseFade.classList.remove("show");
+    phaseFade.setAttribute("aria-hidden","true");
+  },650);
+}
 
 function startCountdown(){
   countdownScreen.classList.add("show");
@@ -1078,8 +1087,15 @@ function resetRunState(finalChance=false){
   },450);
 }
 
-function startRun(){resetRunState(false)}
-function startFinalChance(){resetRunState(true)}
+function registerAttempt(){
+  attemptCount++;
+  sessionStorage.setItem(ATTEMPT_KEY,String(attemptCount));
+}
+
+function startRun(){
+  registerAttempt();
+  resetRunState(false);
+}
 
 function chooseEliminated(){
   const active=activeCharacters();
@@ -1164,58 +1180,109 @@ phaseContinueBtn.addEventListener("click",()=>{
   });
 });
 
-function handleFavoriteLoss(fav){
-  playSound("erro",.42);
+function defeatCopy(reason,fav){
+  const n=failureCount;
 
-  if(restartCount<MAX_RESTARTS){
-    restartCount++;
-    sessionStorage.setItem(RESTART_KEY,String(restartCount));
-
-    favoriteLostTitle.textContent=restartCount===1
-      ?"PROTEGIDO PERDIDO."
-      :"AINDA TENTANDO?";
-
-    favoriteLostLine.textContent=restartCount===1
-      ?PROTECTED_TEXTS.primeiraFalha(fav.name)
-      :PROTECTED_TEXTS.segundaFalha(fav.name);
-
-    favoriteRetryBtn.textContent=restartCount===1
-      ?"TENTAR SALVÁ-LO DE NOVO"
-      :"ACEITAR ÚLTIMA CHANCE";
-
-    favoriteLostScreen.classList.add("show");
-    return;
+  if(reason==="favorite"){
+    if(n===1){
+      return {
+        title:"NÃO.",
+        line:`${fav.name} foi eliminado.\nVocê chegou até aqui para perder justamente o nome que escolheu.`,
+        reveal:"A revelação estava depois deste teste. Continua lá."
+      };
+    }
+    if(n===2){
+      return {
+        title:"DE NOVO.",
+        line:`${fav.name} não sobreviveu à sua segunda tentativa.\nComeça a parecer menos azar e mais padrão.`,
+        reveal:"Você continua sem a revelação. Irritante, não é?"
+      };
+    }
+    return {
+      title:"AINDA?",
+      line:`${fav.name} caiu outra vez.\nAdmiro sua insistência. Sua precisão, nem tanto.`,
+      reveal:"Quer a revelação? Então pare de perder antes dela."
+    };
   }
 
-  lockedLine.textContent=PROTECTED_TEXTS.terceiraFalha(fav.name);
-  lockedScreen.classList.add("show");
+  if(n===1){
+    return {
+      title:"TEMPO ESGOTADO.",
+      line:"Sessenta segundos pareciam muitos antes de começarem a correr.",
+      reveal:"O arquivo continua fechado. Você não chegou até ele."
+    };
+  }
+  if(n===2){
+    return {
+      title:"TARDE DEMAIS.",
+      line:"Você já sabia que o relógio não esperaria. Mesmo assim, ele venceu de novo.",
+      reveal:"A revelação continua exatamente onde você deixou: fora do seu alcance."
+    };
+  }
+  return {
+    title:"QUE PERSISTÊNCIA.",
+    line:"Você continua voltando. O cronômetro continua ganhando.",
+    reveal:"Eu posso fazer isso a noite inteira. A revelação não vai se abrir por pena."
+  };
 }
 
-favoriteRetryBtn.addEventListener("click",()=>{
-  favoriteLostScreen.classList.remove("show");
-  playHack(
-    "> VAMOS VER SE CULPA MELHORA SUA PRECISÃO // PROTOCOLO FINAL...",
-    startFinalChance,
-    TIMING.novaTentativa
-  );
-});
-
-function handleTimeout(){
-  if(!running) return;
+function showDefeat(reason,fav=null){
   running=false;
   transition=true;
   clearTargets();
   playSound("erro",.40);
-  timeoutScreen.classList.add("show");
+
+  failureCount++;
+  sessionStorage.setItem(FAILURE_KEY,String(failureCount));
+
+  const chosen=fav||getCharacter(favoriteId);
+  const copy=defeatCopy(reason,chosen);
+
+  defeatTitle.textContent=copy.title;
+  lockedLine.textContent=copy.line;
+  defeatReveal.textContent=copy.reveal;
+
+  lockedScreen.classList.add("show");
 }
 
-timeoutRetryBtn.addEventListener("click",()=>{
-  timeoutScreen.classList.remove("show");
-  playHack(
-    "> CARIDADE AUTORIZADA // PROTOCOLO FINAL...",
-    startFinalChance,
-    TIMING.novaTentativa
-  );
+function handleFavoriteLoss(fav){
+  showDefeat("favorite",fav);
+}
+
+function handleTimeout(){
+  if(!running)return;
+  showDefeat("timeout");
+}
+
+restartTestBtn.addEventListener("click",()=>{
+  lockedScreen.classList.remove("show");
+
+  /* mesma escolha, mesmo tempo, mesma dificuldade.
+     Só a tentativa recomeça do zero. */
+  phaseFade.classList.add("show");
+  phaseFade.setAttribute("aria-hidden","false");
+
+  setTimeout(()=>{
+    phaseIndex=0;
+    phaseKills=0;
+    eliminated.clear();
+    totalFavoriteHits=0;
+    timeLeft=TOTAL_TIME;
+    timerAccumulator=0;
+    spawnAccumulator=0;
+    resetPhaseHits();
+    updateHud();
+
+    startCountdown();
+
+    phaseFade.classList.remove("show");
+    phaseFade.setAttribute("aria-hidden","true");
+  },520);
+});
+
+giveUpBtn.addEventListener("click",()=>{
+  sessionStorage.setItem("phantasma_tiro_desistiu","1");
+  location.href="../index.html";
 });
 
 function finishGame(){
@@ -1238,6 +1305,8 @@ function finishGame(){
 
   finalMessage.textContent=line;
   sessionStorage.setItem("phantasma_tiro_concluido","1");
+  sessionStorage.setItem("phantasma_tiro_tentativas",String(attemptCount));
+  sessionStorage.setItem("phantasma_tiro_falhas",String(failureCount));
   playSound("acesso",.40);
   winScreen.classList.add("show");
 }

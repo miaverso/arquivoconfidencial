@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>PHANTASMA // PROTOCOLO FINAL // V75</title>
+<title>PHANTASMA // PROTOCOLO FINAL // V76</title>
 <style>
 :root{--bg:#030403;--panel:#080c09;--line:rgba(219,234,224,.105);--fg:#e7ede8;--muted:#727e75;--g:#8fd2a6;--r:#db7079;--a:#c9b77f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#020302;color:var(--fg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -348,6 +348,44 @@ button:hover,button:focus-visible{border-color:var(--g);background:rgba(143,210,
 .person.selected{filter:none!important;opacity:1!important;transform:scale(1.025)!important;border-color:rgba(143,210,166,.52)!important;z-index:2}
 .person.selected .photo img{filter:none!important;opacity:1!important;transform:scale(1.02)}
 .choice-taunt{display:none;margin-top:22px;border-top:1px solid rgba(219,234,224,.07);padding-top:19px}.choice-taunt.show{display:block;animation:screenIn .5s ease both}.choice-taunt strong{display:block;font-size:clamp(21px,4vw,36px);letter-spacing:-.035em;line-height:1.12;margin-bottom:8px}.choice-taunt p{color:#87938b;margin:0 0 16px}
+
+.test-rules{
+  width:min(720px,92vw);
+  margin:30px auto 6px;
+  border-top:1px solid rgba(219,234,224,.08);
+  border-bottom:1px solid rgba(219,234,224,.08);
+  opacity:0;
+}
+.time-screen.play .test-rules{
+  animation:moralIn .7s ease 1.65s both;
+}
+.test-rule{
+  display:grid;
+  grid-template-columns:74px 1fr;
+  gap:16px;
+  align-items:start;
+  padding:11px 0;
+  border-bottom:1px solid rgba(219,234,224,.045);
+  text-align:left;
+}
+.test-rule:last-child{border-bottom:0}
+.test-rule span{
+  color:#5f6b63;
+  font-size:8px;
+  letter-spacing:.17em;
+  text-transform:uppercase;
+}
+.test-rule strong{
+  color:#8d9991;
+  font-size:10px;
+  line-height:1.5;
+  letter-spacing:.055em;
+  font-weight:600;
+}
+@media(max-width:620px){
+  .test-rule{grid-template-columns:58px 1fr;gap:10px}
+}
+
 /* time / roulette */
 .time-screen{width:100%;min-height:calc(100dvh - 32px);display:none;place-items:center}
 .time-screen.show{display:grid}
@@ -367,9 +405,9 @@ button:hover,button:focus-visible{border-color:var(--g);background:rgba(143,210,
 .time-unit{color:#626f67;font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:0}
 .time-screen.play .time-unit{animation:moralIn .7s ease 1.45s both}
 .time-note{min-height:24px;margin:32px auto 20px;color:#7d8981;line-height:1.6;font-size:13px;max-width:620px;opacity:0}
-.time-screen.play .time-note{animation:moralIn .7s ease 1.9s both}
+.time-screen.play .time-note{animation:moralIn .7s ease 2.1s both}
 .time-action{opacity:0}
-.time-screen.play .time-action{animation:moralIn .7s ease 2.25s both}
+.time-screen.play .time-action{animation:moralIn .7s ease 2.4s both}
 
 .time-number{font-size:clamp(78px,18vw,170px);font-weight:680;letter-spacing:-.08em;line-height:.8;margin:28px 0 20px}.time-number small{font-size:.22em;color:#728077;letter-spacing:.02em;margin-left:8px}.notice{color:#87938b;line-height:1.65;max-width:660px}.roulette-layout{display:grid;grid-template-columns:minmax(270px,430px) 1fr;gap:38px;align-items:center}.wheel-wrap{position:relative;width:min(78vw,420px);aspect-ratio:1;margin:auto}.pointer{position:absolute;z-index:5;left:50%;top:-5px;transform:translateX(-50%);width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:25px solid #d8e0da;filter:drop-shadow(0 4px 6px #000)}
 .wheel{position:absolute;inset:9%;border-radius:50%;border:1px solid rgba(219,234,224,.15);background:conic-gradient(#111713 0 60deg,#0a0e0b 60deg 120deg,#151b17 120deg 180deg,#090c0a 180deg 240deg,#131915 240deg 300deg,#0a0e0b 300deg 360deg);box-shadow:0 20px 65px rgba(0,0,0,.60),inset 0 0 40px rgba(143,210,166,.025);transition:transform 4.3s cubic-bezier(.12,.68,.12,1)}
@@ -440,22 +478,29 @@ button:hover,button:focus-visible{border-color:var(--g);background:rgba(143,210,
     <div class="moral-context moral-step">Vocês encontraram uma justificativa para todos eles.</div>
     <div class="moral-step">
       <div class="moral-question">Agora escolha qual delas você está disposto a proteger.</div>
-      <button id="chooseBtn">ESCOLHER PROTEGIDO</button>
+      <button id="chooseBtn">CONTINUAR</button>
     </div>
   </div>
 </section>
 
 <section class="screen" id="choiceScreen"><div class="shell"><div class="head"><span>SESSÃO // PROTEÇÃO</span><strong>UMA ESCOLHA</strong></div><div class="body">
-  <h2 class="choice-title">Quem você protege?</h2><div class="grid" id="peopleGrid"></div>
+  <h2 class="choice-title">Qual deles você não suporta perder?</h2><div class="grid" id="peopleGrid"></div>
   <div class="choice-taunt" id="choiceTaunt"><strong id="tauntA"></strong><p id="tauntB"></p><button id="choiceContinue">CONTINUAR</button></div>
 </div></div></section>
 
 <section class="screen time-screen" id="timeScreen">
   <div class="time-wrap">
-    <div class="time-protected" id="timeProtected">PROTEGIDO // REGISTRADO</div>
+    <div class="time-protected" id="timeProtected">ESCOLHA REGISTRADA</div>
     <div class="time-label">TEMPO CONCEDIDO</div>
     <div class="time-number"><span id="rawTime">60</span></div>
     <div class="time-unit">SEGUNDOS</div>
+
+    <div class="test-rules" id="testRules">
+      <div class="test-rule"><span>ALVO</span><strong>ATINGIR OS OUTROS CISNES.</strong></div>
+      <div class="test-rule"><span>RISCO</span><strong id="chosenRisk">SUA ESCOLHA TAMBÉM ENTRARÁ NA LINHA DE TIRO.</strong></div>
+      <div class="test-rule"><span>FALHA</span><strong>SE ELA FOR ELIMINADA OU O TEMPO ACABAR, A TENTATIVA TERMINA.</strong></div>
+    </div>
+
     <div class="time-note" id="penaltyNote"></div>
     <div class="time-action"><button id="timeNext">INICIAR TESTE</button></div>
   </div>
@@ -839,11 +884,11 @@ $("chooseBtn").onclick=()=>transitionTo("choiceScreen",160);
 /* CHOICE */
 const peopleGrid=$("peopleGrid"),choiceTaunt=$("choiceTaunt"),tauntA=$("tauntA"),tauntB=$("tauntB");
 const TAUNTS=[
- ["Você chamou isso de proteção.","O sistema registrou como descarte."],
- ["Salvar um. Condenar o resto.","Você aprende rápido."],
- ["Interessante.","Você escolhe quem vive com mais facilidade do que deveria."],
- ["Proteger alguém sempre parece nobre.","Até exigir que você abandone os outros."],
- ["Você não escolheu só quem salvar.","Escolheu quem deixar cair."]
+ ["Pronto.","Agora esse nome pesa mais que os outros."],
+ ["Interessante.","Foi esse o rosto que você decidiu não perder."],
+ ["Uma escolha.","Vamos descobrir quanto ela vale quando houver consequência."],
+ ["Você decidiu.","Não tente fingir que foi só um clique."],
+ ["Guarde bem esse nome.","Daqui a pouco ele vai custar alguma coisa."]
 ];
 function setImg(img,c,fallback){
   const candidates=[SITE_ROOT+"jogo/"+c.file,"jogo/"+c.file,RAW_OLD+"/jogo/"+c.file];let i=0;
@@ -890,7 +935,9 @@ async function showTime(){
   baseTime=Math.max(1,60-penalty);
   sessionStorage.setItem("phantasma_tempo_antes_roleta",String(baseTime));
 
-  $("timeProtected").textContent=(sessionStorage.getItem("phantasma_protegido")||"PROTEGIDO").toUpperCase()+" // PROTEGIDO REGISTRADO";
+  const chosenName=(sessionStorage.getItem("phantasma_protegido")||"—").toUpperCase();
+  $("timeProtected").textContent=chosenName+" // ESCOLHA REGISTRADA";
+  $("chosenRisk").textContent=chosenName+" TAMBÉM ENTRARÁ NA LINHA DE TIRO.";
   $("rawTime").textContent="60";
   $("penaltyNote").textContent=penalty>0?"Você aceitou ajuda quando precisou. Eu disse que teria um custo.":"";
   $("timeNext").textContent=baseTime<30?"CONTINUAR":"INICIAR TESTE";
