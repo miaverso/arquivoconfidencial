@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>Ilustrações C4 - Drive</title>
-<!-- PHANTASMA // PARTE I // V4.5 // MONTE DE FOTOS CORRIGIDO -->
+<!-- PHANTASMA // PARTE I // V78 MOBILE // VISUAL PRESERVADO -->
 <style>
 :root{
   --g-bg:#f8fafd;--g-panel:#fff;--g-text:#1f1f1f;--g-muted:#5f6368;
@@ -699,6 +699,165 @@ body.cine-hard #drive{
     text-transform:uppercase;
     color:rgba(213,230,220,.44);
   }
+
+
+/* ==========================================================
+   V78 MOBILE // RESPONSIVIDADE SEM REDESIGN
+   ========================================================== */
+
+/* Drive: impede que grid/header empurrem a viewport */
+.drive-top > *,
+.search,
+.search input,
+.file-grid,
+.file,
+.file-meta,
+.filename{
+  min-width:0;
+}
+
+/* safe-area real */
+#hackHUD{
+  left:max(12px,env(safe-area-inset-left));
+  top:max(12px,env(safe-area-inset-top));
+  width:min(440px,calc(100vw - max(24px,env(safe-area-inset-left)) - max(24px,env(safe-area-inset-right))));
+}
+.toast{
+  max-width:calc(100vw - max(28px,env(safe-area-inset-left)) - max(28px,env(safe-area-inset-right)));
+  text-align:center;
+  bottom:max(18px,env(safe-area-inset-bottom));
+}
+#systemStage{
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  padding:
+    max(16px,env(safe-area-inset-top))
+    max(14px,env(safe-area-inset-right))
+    max(16px,env(safe-area-inset-bottom))
+    max(14px,env(safe-area-inset-left));
+}
+.system{margin:auto}
+
+/* Final nunca pode ser cortado verticalmente */
+#endcard{
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  padding:
+    max(22px,env(safe-area-inset-top))
+    max(18px,env(safe-area-inset-right))
+    max(22px,env(safe-area-inset-bottom))
+    max(18px,env(safe-area-inset-left));
+}
+.endbox{
+  margin:auto;
+  padding:10px 0;
+}
+
+/* Interface da câmera respeita notch/home indicator */
+#cameraFinal .tl{left:max(3.2vw,env(safe-area-inset-left));top:max(3.6vh,env(safe-area-inset-top))}
+#cameraFinal .tr{right:max(3.2vw,env(safe-area-inset-right));top:max(3.6vh,env(safe-area-inset-top))}
+#cameraFinal .bl{left:max(3.2vw,env(safe-area-inset-left));bottom:max(3.6vh,env(safe-area-inset-bottom))}
+#cameraFinal .br{right:max(3.2vw,env(safe-area-inset-right));bottom:max(3.6vh,env(safe-area-inset-bottom))}
+#cameraFinal .cam-left{left:max(4vw,env(safe-area-inset-left))}
+#cameraFinal .cam-rec{right:max(4vw,env(safe-area-inset-right))}
+#cameraFinal .cam-hdr{left:max(4.2vw,env(safe-area-inset-left));bottom:max(6.5vh,env(safe-area-inset-bottom))}
+#cameraFinal .battery{right:max(4.2vw,env(safe-area-inset-right));bottom:max(6.1vh,env(safe-area-inset-bottom))}
+
+/* Mobile estreito */
+@media(max-width:420px){
+  .drive-top{
+    grid-template-columns:38px minmax(0,1fr) 32px;
+    padding:7px 8px;
+    gap:6px;
+  }
+  .search{
+    height:42px;
+    padding:0 12px;
+    gap:8px;
+  }
+  .search input{font-size:14px}
+  .avatar{width:31px;height:31px}
+  .content{padding-left:10px;padding-right:10px}
+  .file-grid{gap:8px}
+  .file-meta{padding:9px 8px}
+  .breadcrumb{font-size:18px}
+  .psych-actions{
+    display:grid;
+    grid-template-columns:1fr;
+    width:min(360px,100%);
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .psych-btn,.continue{
+    width:100%;
+    min-width:0;
+    min-height:48px;
+  }
+}
+
+/* Alturas pequenas e celular em paisagem */
+@media(max-height:650px){
+  #systemStage{place-items:start center}
+  .system{margin:auto}
+  .syscard{padding:14px}
+  .ownerbox{margin-top:12px;padding-top:11px}
+  .meter{margin:9px 0}
+  #endcard{place-items:start center}
+  .endbox{
+    margin:auto;
+    padding:18px 0;
+  }
+  .endbox h1{margin-top:9px}
+  .psych-question{margin-top:18px}
+}
+
+@media(max-height:520px) and (orientation:landscape){
+  #systemStage{
+    align-items:start;
+    justify-items:center;
+  }
+  .system{
+    grid-template-columns:1fr;
+    width:min(760px,96vw);
+  }
+  .system .logcard{display:none}
+  .syscard{padding:12px 14px}
+  .syshead{margin-bottom:9px}
+  .line{margin:5px 0}
+  .ownername{font-size:clamp(22px,5vh,34px)}
+  .meter{margin:7px 0}
+
+  #transmission .photo-card{
+    max-height:68dvh !important;
+    max-width:40vw !important;
+  }
+  #transmission .photo-card img{
+    max-height:calc(68dvh - 34px) !important;
+    max-width:38vw !important;
+  }
+  #cameraFinal .cam-corner{width:64px;height:64px}
+  #cameraFinal .focus{width:104px;height:82px}
+  #cameraFinal .focus i{width:31px;height:31px}
+
+  #endcard{
+    place-items:start center;
+  }
+  .endbox{
+    max-width:760px;
+    padding:12px 0;
+  }
+  .endbox h1{font-size:clamp(24px,8vh,38px)}
+  .endbox p{line-height:1.48;margin:5px auto}
+  .psych-question{margin-top:12px}
+  .psych-actions{margin-top:10px}
+  .psych-result{min-height:42px;margin-top:10px}
+  .continue{margin-top:10px}
+}
+
+/* redução de movimento sem desmontar a experiência */
+@media(prefers-reduced-motion:reduce){
+  .take-bg,.wall-bg{animation-duration:60s}
+}
 
 </style>
 </head>
@@ -1439,10 +1598,13 @@ body.cine-hard #drive{
     }catch(e){}
   }
   function cameraFlash(){flash.classList.remove("flashgo");void flash.offsetWidth;flash.classList.add("flashgo");shutter()}
-  function archive(card,index){
-    if(!card||card.classList.contains("archived"))return;
+  function archive(card,index,forceRelayout=false){
+    if(!card)return;
+    if(card.classList.contains("archived")&&!forceRelayout)return;
 
-    const mobile=innerWidth<700;
+    card.dataset.pileIndex=String(index);
+
+    const mobile=matchMedia("(max-width:900px)").matches;
     const slot=PILE_SLOTS[index%PILE_SLOTS.length];
     const layer=Math.floor(index/PILE_SLOTS.length);
 
@@ -1476,6 +1638,23 @@ body.cine-hard #drive{
     card.classList.remove("live");
     card.classList.add("archived");
   }
+  function relayoutPile(){
+    createdCards.forEach((card,i)=>{
+      if(card.classList.contains("archived")){
+        const stored=Number(card.dataset.pileIndex);
+        archive(card,Number.isFinite(stored)?stored:i,true);
+      }
+    });
+  }
+
+  let pileRelayoutTimer=null;
+  function schedulePileRelayout(){
+    clearTimeout(pileRelayoutTimer);
+    pileRelayoutTimer=setTimeout(relayoutPile,120);
+  }
+  addEventListener("resize",schedulePileRelayout,{passive:true});
+  addEventListener("orientationchange",schedulePileRelayout,{passive:true});
+
   function showPhoto(index){
     if(activeCard)archive(activeCard,createdCards.length-1);
 
@@ -1484,7 +1663,7 @@ body.cine-hard #drive{
     card.className="photo-card";
     card.style.setProperty("--z",70+createdCards.length);
 
-    const mobile=innerWidth<700;
+    const mobile=matchMedia("(max-width:900px)").matches;
     const liveX=(Math.random()*2-1)*(mobile?8:26);
     const liveY=(Math.random()*2-1)*(mobile?7:18);
     const liveR=(Math.random()*2-1)*3.6;
@@ -1776,7 +1955,7 @@ body.cine-hard #drive{
     const fill = document.getElementById('unlockFill');
     const percent = document.getElementById('unlockPercent');
     if(!overlay){
-      startQuizUnlockTransition();
+      location.href="quiz.html";
       return;
     }
     overlay.classList.add('show');

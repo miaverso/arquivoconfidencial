@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#020403">
-<title>PHANTASMA // ARQUIVO FINAL // V77</title>
+<title>PHANTASMA // ARQUIVO FINAL // V78 MOBILE</title>
 <style>
 :root{
   --bg:#020403;
@@ -428,6 +428,86 @@ button,input{font:inherit}
   .diag small{margin:0}
   .reveal-title{font-size:clamp(50px,17vw,95px)}
 }
+
+/* =========================================================
+   V78 MOBILE
+   ========================================================= */
+.stage{
+  padding:
+    max(10px,env(safe-area-inset-top))
+    max(10px,env(safe-area-inset-right))
+    max(10px,env(safe-area-inset-bottom))
+    max(10px,env(safe-area-inset-left));
+}
+.field input{
+  scroll-margin-top:18vh;
+  scroll-margin-bottom:38vh;
+}
+@media(max-width:650px){
+  .head{
+    gap:8px;
+  }
+  .head span,.head strong{
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .decode-title{
+    max-width:100%;
+    gap:3px;
+  }
+  .reel{
+    min-width:.55em;
+    font-size:clamp(20px,6vw,32px);
+  }
+  .date-line{
+    gap:4px;
+    font-size:clamp(18px,5.5vw,27px);
+  }
+  .reveal-inner{width:min(100%,94vw)}
+  .reveal-title{
+    overflow-wrap:anywhere;
+    word-break:normal;
+    hyphens:auto;
+  }
+
+  #registerScreen.show{
+    place-items:start center;
+  }
+  .register-wrap{
+    padding:
+      max(28px,env(safe-area-inset-top))
+      0
+      max(34px,env(safe-area-inset-bottom));
+    margin:auto;
+  }
+  .register-title{
+    overflow-wrap:anywhere;
+  }
+  .field input{
+    font-size:16px;
+  }
+  .action{
+    min-height:48px;
+  }
+}
+@media(max-height:650px){
+  #registerScreen.show{place-items:start center}
+  .register-wrap{
+    padding-top:22px;
+    padding-bottom:max(28px,env(safe-area-inset-bottom));
+  }
+}
+@media(max-height:520px) and (orientation:landscape){
+  .body{padding-top:20px;padding-bottom:20px}
+  .decode-title{min-height:72px;margin:2px auto 12px}
+  .date-line{margin-bottom:15px}
+  .diagnostics{margin-bottom:14px}
+  .status{margin-top:12px}
+  .log{margin-top:12px}
+}
+
 </style>
 </head>
 <body>
@@ -559,6 +639,7 @@ const diagSignature=$("diagSignature");
 const diagIndex=$("diagIndex");
 
 const finalTitle=$("finalTitle");
+addEventListener("resize",()=>requestAnimationFrame(fitDecodeTitle),{passive:true});
 const finalDate=$("finalDate");
 const previewBadge=$("previewBadge");
 
@@ -633,6 +714,24 @@ function diagnostic(len){
   diagBlock.textContent=String(Math.min(10,Math.max(1,len))).padStart(2,"0")+" / 10";
 }
 
+function fitDecodeTitle(){
+  const reels=[...decodeTitle.querySelectorAll(".reel")];
+  if(!reels.length)return;
+
+  reels.forEach(r=>r.style.removeProperty("font-size"));
+
+  requestAnimationFrame(()=>{
+    const available=Math.max(220,decodeTitle.clientWidth||innerWidth*.90);
+    const count=reels.length;
+    const cap=innerWidth<=420?34:58;
+    const floor=innerWidth<=360?17:19;
+    const estimate=available/Math.max(1,count*.78);
+    const px=Math.max(floor,Math.min(cap,estimate));
+
+    reels.forEach(r=>r.style.fontSize=px+"px");
+  });
+}
+
 function buildRandomTitle(len){
   decodeTitle.innerHTML="";
 
@@ -656,6 +755,7 @@ function buildRandomTitle(len){
   }
 
   diagnostic(len);
+  fitDecodeTitle();
 }
 
 function startRandomTitle(){
@@ -762,6 +862,8 @@ function buildFinalTitleStructure(){
     reel.appendChild(span);
     decodeTitle.appendChild(reel);
   });
+
+  fitDecodeTitle();
 }
 
 function buildFinalDateStructure(){

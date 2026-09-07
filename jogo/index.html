@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#020403">
-<title>PHANTASMA // PROTOCOLO FINAL // V76</title>
+<title>PHANTASMA // PROTOCOLO FINAL // V78 MOBILE</title>
 <!-- PHANTASMA V76 // ENTRADA ÚNICA + DERROTA NARRATIVA -->
 
 <style>
@@ -388,6 +388,101 @@ button{font:inherit;-webkit-tap-highlight-color:transparent}
   .target{min-width:100px;min-height:100px}
   .tip{padding:0 4px;font-size:7px}
 }
+
+/* =========================================================
+   V78 MOBILE // ARENA HEIGHT-AWARE
+   ========================================================= */
+.sound-toggle{
+  min-height:44px;
+  min-width:44px;
+}
+@media(max-width:760px){
+  .app{
+    width:calc(100% - 14px);
+    height:100dvh;
+    padding:
+      max(7px,env(safe-area-inset-top))
+      0
+      max(54px,calc(env(safe-area-inset-bottom) + 44px));
+  }
+  .top{
+    min-width:0;
+  }
+  .brand-title,.brand-sub,.hud{min-width:0}
+  .brand-title{
+    overflow-wrap:anywhere;
+  }
+  .brand-sub{
+    line-height:1.35;
+  }
+  .arena{
+    min-height:0;
+  }
+  .target{
+    min-width:0;
+    min-height:0;
+  }
+  .overlay{
+    padding:
+      max(14px,env(safe-area-inset-top))
+      max(14px,env(safe-area-inset-right))
+      max(14px,env(safe-area-inset-bottom))
+      max(14px,env(safe-area-inset-left));
+  }
+  .panel{margin:auto}
+}
+@media(max-width:390px){
+  .brand-title{font-size:clamp(21px,6.5vw,27px)}
+  .brand-sub{font-size:8px}
+  .hud{gap:5px 9px}
+  .time-big{font-size:28px}
+}
+@media(max-height:520px) and (orientation:landscape){
+  .app{
+    width:calc(100% - 12px);
+    padding:
+      max(5px,env(safe-area-inset-top))
+      0
+      max(5px,env(safe-area-inset-bottom));
+    gap:5px;
+  }
+  .top{
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:end;
+    gap:14px;
+    padding:4px 2px 6px;
+  }
+  .brand-kicker{margin-bottom:3px}
+  .brand-title{font-size:clamp(20px,5.3vh,27px)}
+  .brand-sub{display:none}
+  .hud{
+    width:auto;
+    min-width:205px;
+    grid-template-columns:auto auto;
+    text-align:right;
+    gap:3px 16px;
+  }
+  .hud>div:nth-child(2){text-align:right}
+  .progress-track{grid-column:1/-1}
+  .time-big{font-size:clamp(24px,7vh,32px)}
+  .tip{display:none}
+
+  .sound-toggle{
+    right:max(8px,env(safe-area-inset-right));
+    top:max(8px,env(safe-area-inset-top));
+    bottom:auto;
+    min-height:40px;
+    opacity:.78;
+  }
+
+  .overlay{align-items:flex-start}
+  .panel{padding:8px 0}
+  .panel h2{font-size:clamp(27px,9vh,42px)}
+  .panel p{line-height:1.5;margin:7px 0}
+  .result-card{margin:12px auto}
+  .countdown{font-size:clamp(70px,24vh,110px)}
+}
+
 </style>
 </head>
 
@@ -785,8 +880,8 @@ let failureCount=Number(sessionStorage.getItem(FAILURE_KEY)||0);
 function activeCharacters(){return CHARACTERS.filter(c=>!eliminated.has(c.id))}
 function measureArena(){
   const rect=arena.getBoundingClientRect();
-  arenaW=Math.max(280,rect.width);
-  arenaH=Math.max(300,rect.height);
+  arenaW=Math.max(240,rect.width);
+  arenaH=Math.max(140,rect.height);
 }
 measureArena();
 new ResizeObserver(measureArena).observe(arena);
@@ -994,11 +1089,17 @@ function spawnTarget(force=false){
 
   const p=PHASES[phaseIndex];
   const mobile=innerWidth<=760;
-  const base=mobile
-    ?Math.max(TARGET_SIZE.mobileMin,Math.min(TARGET_SIZE.mobileMax,arenaW*TARGET_SIZE.mobileRatio))
+
+  const widthBase=mobile
+    ?Math.max(100,Math.min(TARGET_SIZE.mobileMax,arenaW*TARGET_SIZE.mobileRatio))
     :Math.max(TARGET_SIZE.desktopMin,Math.min(TARGET_SIZE.desktopMax,arenaW*TARGET_SIZE.desktopRatio));
 
-  const size=base*p.size;
+  const desired=widthBase*p.size;
+  const heightCap=mobile
+    ?Math.max(88,arenaH*.38)
+    :Math.max(118,arenaH*.44);
+
+  const size=Math.min(desired,heightCap);
   const dir=Math.random()<.5?1:-1;
   const minY=26;
   const maxY=Math.max(minY+10,arenaH-size-32);

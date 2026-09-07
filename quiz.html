@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>PHANTASMA // VERIFICAÇÃO I // V71</title>
+<title>PHANTASMA // VERIFICAÇÃO I // V78 MOBILE</title>
 <style>
 :root{
   --bg:#050706;--panel:rgba(8,12,9,.88);--line:rgba(218,236,224,.10);
@@ -56,6 +56,37 @@ button:hover,button:focus-visible{border-color:var(--green);background:rgba(143,
 .curtain{position:fixed;inset:0;z-index:50;background:#020302;display:grid;place-items:center;opacity:0;pointer-events:none;transition:.35s}
 .curtain.show{opacity:1;pointer-events:auto}.bits{font-family:ui-monospace,monospace;color:#789383;opacity:.44;font-size:12px;line-height:1.7;letter-spacing:.2em;text-align:center;width:min(820px,94vw);word-break:break-all}
 @media(max-width:620px){body{padding:12px}.card{min-height:460px;padding:24px 18px}.bool{grid-template-columns:1fr}.eyebrow{font-size:9px}}
+
+/* V78 MOBILE */
+@media(max-width:620px){
+  body{
+    padding:
+      max(12px,env(safe-area-inset-top))
+      max(12px,env(safe-area-inset-right))
+      max(12px,env(safe-area-inset-bottom))
+      max(12px,env(safe-area-inset-left));
+    place-items:start center;
+  }
+  .wrap{margin:auto 0}
+  .question{
+    overflow-wrap:anywhere;
+    hyphens:auto;
+  }
+  .actions{flex-direction:column}
+  .actions button{width:100%;min-height:48px}
+  input{font-size:16px}
+}
+@media(max-height:640px){
+  .card{
+    min-height:0;
+    justify-content:flex-start;
+    padding-top:22px;
+    padding-bottom:22px;
+  }
+  .answer-zone{margin-top:24px}
+  .question{font-size:clamp(24px,7vw,34px)}
+}
+
 </style>
 </head>
 <body>
@@ -137,7 +168,7 @@ function renderCurrent(){
     answerZone.innerHTML='<form id="answerForm"><input id="answerInput" autocomplete="off" autocapitalize="sentences" placeholder="digite sua resposta"><div class="actions"><button type="submit">CONFIRMAR</button></div></form>';
     const form=$("answerForm"),input=$("answerInput");
     form.onsubmit=e=>{e.preventDefault();answerText(input.value,input)};
-    setTimeout(()=>input.focus(),80);
+    if(matchMedia("(pointer:fine)").matches && innerWidth>760) setTimeout(()=>input.focus({preventScroll:true}),80);
     meta.textContent="a pergunta é encerrada depois de três respostas incorretas.";
   }
 }

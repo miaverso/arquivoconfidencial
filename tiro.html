@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>PHANTASMA // PROTOCOLO FINAL // V76</title>
+<title>PHANTASMA // PROTOCOLO FINAL // V78 MOBILE</title>
 <style>
 :root{--bg:#030403;--panel:#080c09;--line:rgba(219,234,224,.105);--fg:#e7ede8;--muted:#727e75;--g:#8fd2a6;--r:#db7079;--a:#c9b77f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#020302;color:var(--fg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -416,6 +416,142 @@ button:hover,button:focus-visible{border-color:var(--g);background:rgba(143,210,
 /* ready */
 .ready-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0}.ready-item{border-top:1px solid rgba(219,234,224,.09);padding-top:12px}.ready-item small{display:block;color:#657168;font-size:9px;letter-spacing:.13em}.ready-item strong{display:block;margin-top:6px;font-size:clamp(24px,4vw,38px)}
 @media(max-width:760px){.stage{padding:9px}.body{padding:24px 16px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));max-height:58dvh;overflow:auto}.roulette-layout{grid-template-columns:1fr;gap:20px}.roulette-copy{text-align:center}.ready-grid{grid-template-columns:1fr}.head{font-size:8px}.decode-title{gap:clamp(3px,1.2vw,7px);max-width:96%}.reel{font-size:clamp(24px,7.2vw,34px);min-width:.62em}}
+
+/* =========================================================
+   V78 MOBILE
+   ========================================================= */
+.stage{
+  padding:
+    max(10px,env(safe-area-inset-top))
+    max(10px,env(safe-area-inset-right))
+    max(10px,env(safe-area-inset-bottom))
+    max(10px,env(safe-area-inset-left));
+}
+.moral-terms{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:5px 18px;
+}
+.moral-terms span{white-space:normal}
+
+@media(max-width:760px){
+  .screen{max-width:100%}
+  .shell{max-width:100%}
+  .head{
+    min-width:0;
+    gap:8px;
+  }
+  .head span,.head strong{
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  .moral-sequence{width:min(100%,94vw)}
+  .moral-opening{
+    font-size:clamp(28px,9.5vw,44px);
+    overflow-wrap:anywhere;
+  }
+  .moral-terms{
+    margin:25px auto;
+    font-size:14px;
+    line-height:1.55;
+    gap:7px 14px;
+  }
+  .moral-context{font-size:14px}
+  .moral-question{
+    margin:30px auto 22px;
+    font-size:clamp(25px,8.5vw,38px);
+  }
+
+  .choice-title{
+    font-size:clamp(27px,8.5vw,39px);
+    line-height:1.02;
+  }
+  .grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    max-height:min(54dvh,520px);
+    overflow:auto;
+    overscroll-behavior:contain;
+    scrollbar-width:thin;
+    padding-right:2px;
+  }
+  .person{padding:5px}
+  .person span.name{font-size:9px}
+  .choice-taunt{
+    margin-top:15px;
+    padding-top:14px;
+  }
+
+  .time-wrap{width:min(100%,94vw)}
+  .time-protected{margin-bottom:20px}
+  .time-number{
+    font-size:clamp(78px,26vw,138px);
+    margin:20px 0 13px;
+  }
+  .test-rules{
+    width:100%;
+    margin-top:22px;
+  }
+  .time-note{
+    margin:20px auto 15px;
+  }
+
+  .roulette-layout{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+  .wheel-wrap{
+    width:min(78vw,42dvh,420px);
+    min-width:170px;
+  }
+  .roulette-copy h2{
+    font-size:clamp(27px,8vw,40px);
+    margin-top:0;
+  }
+  .roulette-copy p{
+    font-size:13px;
+    line-height:1.55;
+  }
+}
+
+@media(max-width:380px){
+  .body{padding-left:12px;padding-right:12px}
+  .grid{gap:6px}
+  .person span.name{font-size:8px}
+  .moral-terms{gap:5px 10px}
+  .test-rule{grid-template-columns:50px 1fr;gap:8px}
+}
+
+@media(max-height:680px){
+  .time-screen.show{place-items:start center}
+  .time-wrap{
+    padding:18px 0 max(20px,env(safe-area-inset-bottom));
+    margin:auto;
+  }
+  .time-protected{margin-bottom:13px}
+  .time-number{
+    font-size:min(21dvh,122px);
+    margin:14px 0 10px;
+  }
+  .test-rules{margin-top:15px}
+  .test-rule{padding:8px 0}
+  .time-note{margin:13px auto 11px}
+}
+@media(max-height:520px) and (orientation:landscape){
+  .stage{place-items:start center}
+  .cinematic{min-height:100dvh}
+  .moral-sequence{padding:16px 0}
+  .moral-opening{font-size:clamp(25px,7vh,36px)}
+  .moral-terms{margin:15px auto;font-size:12px}
+  .moral-context{margin-top:10px;font-size:12px}
+  .moral-question{margin:18px auto 14px;font-size:clamp(23px,6.4vh,32px)}
+  .grid{max-height:58dvh}
+  .wheel-wrap{width:min(45vw,55dvh,270px);min-width:150px}
+}
+
 </style>
 </head>
 <body>
@@ -474,7 +610,10 @@ button:hover,button:focus-visible{border-color:var(--g);background:rgba(143,210,
   <div class="moral-sequence">
     <div class="cinematic-kicker moral-step">PHANTASMA // TESTE DE CRITÉRIO</div>
     <div class="moral-opening moral-step">É curioso como uma morte muda de nome dependendo de quem a comete.</div>
-    <div class="moral-terms moral-step">Defesa. &nbsp; Misericórdia. &nbsp; Proteção. &nbsp; Necessidade. &nbsp; Omissão. &nbsp; Prova de lealdade.</div>
+    <div class="moral-terms moral-step">
+      <span>Defesa.</span><span>Misericórdia.</span><span>Proteção.</span>
+      <span>Necessidade.</span><span>Omissão.</span><span>Prova de lealdade.</span>
+    </div>
     <div class="moral-context moral-step">Vocês encontraram uma justificativa para todos eles.</div>
     <div class="moral-step">
       <div class="moral-question">Agora escolha qual delas você está disposto a proteger.</div>
@@ -608,6 +747,24 @@ function diagnosticForLength(len,fast=false){
   }
 }
 
+function fitDecodeTitle(){
+  const reels=[...decodeTitle.querySelectorAll(".reel")];
+  if(!reels.length)return;
+
+  reels.forEach(r=>r.style.removeProperty("font-size"));
+
+  requestAnimationFrame(()=>{
+    const available=Math.max(220,decodeTitle.clientWidth||innerWidth*.88);
+    const count=reels.length;
+    const cap=innerWidth<=420?34:58;
+    const floor=innerWidth<=360?18:20;
+    const estimate=available/Math.max(1,count*.78);
+    const px=Math.max(floor,Math.min(cap,estimate));
+
+    reels.forEach(r=>r.style.fontSize=px+"px");
+  });
+}
+
 function buildTitle(len){
   decodeTitle.classList.remove("morph");
   decodeTitle.innerHTML="";
@@ -628,6 +785,7 @@ function buildTitle(len){
   }
 
   diagnosticForLength(len,titleFast);
+  fitDecodeTitle();
   void decodeTitle.offsetWidth;
   decodeTitle.classList.add("morph");
 }
@@ -979,6 +1137,15 @@ function startShootingGame(){
 /* ROULETTE */
 const wheel=$("wheel"),spinBtn=$("spinBtn"),spinResult=$("spinResult"),bonusEl=$("bonus");
 let wheelValues=[],chosenBonus=0,spun=false;
+function layoutWheelLabels(){
+  const radius=Math.max(52,(wheel.clientWidth||260)*.35);
+  wheel.querySelectorAll(".wheel-label").forEach(s=>{
+    const angle=Number(s.dataset.angle||0);
+    s.style.transform=`rotate(${angle}deg) translateY(${-radius}px) rotate(${-angle}deg)`;
+  });
+}
+addEventListener("resize",()=>requestAnimationFrame(layoutWheelLabels),{passive:true});
+
 function makeValues(time){
   const min=Math.max(5,31-time),max=Math.max(min,60-time),vals=[];
   for(let i=0;i<6;i++)vals.push(Math.round(min+(max-min)*(i/5)));
@@ -988,7 +1155,8 @@ function makeValues(time){
 async function prepareRoulette(){
   await transitionTo("rouletteScreen",150);spun=false;spinResult.style.display="none";spinBtn.style.display="inline-block";wheel.style.transition="none";wheel.style.transform="rotate(0deg)";
   wheelValues=makeValues(baseTime);wheel.querySelectorAll(".wheel-label").forEach(x=>x.remove());
-  wheelValues.forEach((v,i)=>{const s=document.createElement("div");s.className="wheel-label";const angle=i*60+30;s.style.transform=`rotate(${angle}deg) translateY(-145px) rotate(${-angle}deg)`;s.textContent="+"+v+"s";wheel.appendChild(s)})
+  wheelValues.forEach((v,i)=>{const s=document.createElement("div");s.className="wheel-label";s.dataset.angle=String(i*60+30);s.textContent="+"+v+"s";wheel.appendChild(s)});
+  layoutWheelLabels();
 }
 spinBtn.onclick=()=>{
   if(spun)return;spun=true;spinBtn.disabled=true;

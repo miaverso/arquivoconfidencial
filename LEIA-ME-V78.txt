@@ -1,0 +1,106 @@
+PHANTASMA // V78 MOBILE
+
+OBJETIVO:
+Correção responsiva, sem redesign da estética aprovada.
+
+SUBSTITUIR ESTES 6 ARQUIVOS:
+1. /index.html
+2. /quiz.html
+3. /pistas.html
+4. /tiro.html
+5. /jogo/index.html
+6. /anuncio.html
+
+IMPORTANTE:
+Esta pasta foi construída sobre os arquivos atuais enviados/usados na auditoria.
+Não altera a narrativa nem os critérios dos jogos.
+
+============================================================
+INDEX.HTML // ABERTURA
+============================================================
+- abertura enviada pela autora usada como base
+- falso Drive protegido contra overflow horizontal
+- monte de fotos agora usa o MESMO breakpoint do CSS e JS: 900px
+- fotos arquivadas são reposicionadas após resize/orientationchange
+- sistema tomado pode rolar em celulares baixos
+- endcard pode rolar em vez de ser cortado
+- safe-area para iPhone/notch/home indicator
+- paisagem baixa recebe layout mais compacto
+- corrigida recursão morta do antigo helper de unlock caso ele seja chamado
+
+============================================================
+QUIZ.HTML
+============================================================
+- safe-area
+- telas baixas não forçam card de 460px
+- V/F e ações ficam mais confortáveis
+- perguntas longas podem quebrar corretamente
+- teclado NÃO abre automaticamente em mobile
+- desktop mantém autofocus
+
+============================================================
+PISTAS.HTML
+============================================================
+CORREÇÃO CRÍTICA:
+A V74 tinha uma regra mobile de 1 coluna e depois outra regra voltava
+.clues para 3 colunas.
+
+Agora o bloco FINAL força:
+.clues { grid-template-columns: 1fr !important; }
+
+Somente abaixo de 760px.
+
+Além disso:
+- safe-area
+- título/pistas quebram sem estourar
+- resposta e botão reorganizados
+- alturas pequenas compactadas
+- teclado não é chamado automaticamente no mobile
+
+O VISUAL V74 APROVADO PELA MIA FOI PRESERVADO.
+
+============================================================
+TIRO.HTML
+============================================================
+- corrigida uma tag </div> extra dentro de decodeDiagnostics
+- termos morais deixaram de usar cadeia de &nbsp;
+- termos agora quebram em múltiplas linhas naturalmente
+- escolha em 2 colunas com área rolável controlada
+- tela de tempo compacta em celulares baixos
+- roleta considera largura E altura
+- números da roleta recalculam a posição conforme o tamanho real da roda
+- decodificação ajusta o tamanho dos caracteres para não ultrapassar a tela
+- safe-area e paisagem baixa
+
+============================================================
+JOGO/INDEX.HTML
+============================================================
+- alvo agora é calculado por LARGURA E ALTURA da arena
+- evita alvos gigantes em celular deitado
+- HUD compactado em paisagem
+- botão de som agora tem área touch mínima de 44px
+- arena ganha mais espaço em aparelhos baixos
+- overlays respeitam safe-area
+- mesma dificuldade e mecânicas; só dimensionamento visual mudou
+
+============================================================
+ANUNCIO.HTML
+============================================================
+- decodificação final ajusta automaticamente o título ao espaço disponível
+- protege títulos grandes antes mesmo do título verdadeiro ser informado
+- formulário lida melhor com teclado mobile
+- inputs têm scroll-margin
+- safe-area
+- paisagem baixa compactada
+- revelação grande pode quebrar linha sem escapar lateralmente
+
+============================================================
+VIEWPORTS-ALVO DESTA RODADA
+============================================================
+320 x 568
+360 x 640
+390 x 844
+430 x 932
+768 x 1024
+844 x 390 (paisagem)
+932 x 430 (paisagem)
