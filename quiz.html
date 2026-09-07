@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>PHANTASMA // VERIFICAÇÃO I // V78 MOBILE</title>
+<title>PHANTASMA // VERIFICAÇÃO I // V83</title>
 <style>
 :root{
   --bg:#050706;--panel:rgba(8,12,9,.88);--line:rgba(218,236,224,.10);
@@ -53,8 +53,57 @@ button:hover,button:focus-visible{border-color:var(--green);background:rgba(143,
 .feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}
 .meta{margin-top:15px;color:#4e5952;font-size:9px;letter-spacing:.09em}
 .shake{animation:shake .35s ease}@keyframes shake{25%{transform:translateX(4px)}50%{transform:translateX(-3px)}75%{transform:translateX(2px)}}
-.curtain{position:fixed;inset:0;z-index:50;background:#020302;display:grid;place-items:center;opacity:0;pointer-events:none;transition:.35s}
-.curtain.show{opacity:1;pointer-events:auto}.bits{font-family:ui-monospace,monospace;color:#789383;opacity:.44;font-size:12px;line-height:1.7;letter-spacing:.2em;text-align:center;width:min(820px,94vw);word-break:break-all}
+.curtain{
+  position:fixed;inset:0;z-index:50;
+  background:
+    radial-gradient(circle at 50% 46%,rgba(28,47,35,.10),transparent 34%),
+    #020302;
+  display:grid;place-items:center;
+  padding:max(20px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right))
+          max(20px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));
+  opacity:0;pointer-events:none;
+  transition:opacity .36s ease;
+}
+.curtain.show{opacity:1;pointer-events:auto}
+.curtain-copy{
+  width:min(560px,92vw);
+  text-align:center;
+  color:#dfe8e2;
+  opacity:0;
+  transform:translateY(7px);
+}
+.curtain.show .curtain-copy{
+  animation:quizExitIn .48s ease .12s both;
+}
+.curtain-kicker{
+  color:#66746b;
+  font:600 8px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+}
+.curtain-title{
+  margin-top:12px;
+  font-size:clamp(22px,4vw,34px);
+  line-height:1.05;
+  font-weight:680;
+  letter-spacing:-.025em;
+}
+.curtain-line{
+  width:min(220px,52vw);
+  height:1px;
+  margin:20px auto 0;
+  background:linear-gradient(90deg,transparent,rgba(143,210,166,.32),transparent);
+  transform:scaleX(0);
+}
+.curtain.show .curtain-line{
+  animation:quizExitLine .58s cubic-bezier(.2,.8,.2,1) .28s both;
+}
+@keyframes quizExitIn{
+  to{opacity:1;transform:none}
+}
+@keyframes quizExitLine{
+  to{transform:scaleX(1)}
+}
 @media(max-width:620px){body{padding:12px}.card{min-height:460px;padding:24px 18px}.bool{grid-template-columns:1fr}.eyebrow{font-size:9px}}
 
 /* V78 MOBILE */
@@ -100,7 +149,13 @@ button:hover,button:focus-visible{border-color:var(--green);background:rgba(143,
     <div class="meta" id="meta"></div>
   </section>
 </main>
-<div class="curtain" id="curtain"><div class="bits" id="bits"></div></div>
+<div class="curtain" id="curtain">
+  <div class="curtain-copy">
+    <div class="curtain-kicker">VERIFICAÇÃO // CONCLUÍDA</div>
+    <div class="curtain-title">Acesso ao painel liberado.</div>
+    <div class="curtain-line"></div>
+  </div>
+</div>
 <script>
 "use strict";
 const QUESTIONS=[{"id":1,"type":"text","q":"Qual é o nome do atirador de Westbrigde?","answers":["Luke","Luke Hancey"]},{"id":2,"type":"text","q":"Qual o valor do colar que o Killian compra no leilão da Charlotte?","answers":["200mil","200 mil","200k","200 K","200.000","200.000,00","200000","200000,00","duzentos mil"],"special":"money200k"},{"id":3,"type":"text","q":"Qual era o desenho dentro da cápsula da Ivy?","answers":["Medusa"]},{"id":4,"type":"text","q":"O que deixam no armário de Olívia em Albatroz?","answers":["pé","um pé"]},{"id":5,"type":"text","q":"Qual pássaro é o símbolo de liberdade e maldição que plana entre o céu e o mar?","answers":["Albatroz"]},{"id":6,"type":"text","q":"Quem é o autor do soneto favorito da Olívia?","answers":["Shakespeare"]},{"id":7,"type":"text","q":"Em qual dedo o Dex tem um Bambi tatuado?","answers":["dedo anelar","anelar"]},{"id":8,"type":"text","q":"Quem disse “Sou um assassino, não um traidor”?","answers":["Dex","Dexter"]},{"id":9,"type":"text","q":"O que a Olívia usou para causar alergia no Dex?","answers":["batom de canela","canela"]},{"id":10,"type":"text","q":"O que significa OPPV?","answers":["obsessão patológica por você"]},{"id":11,"type":"text","q":"Em qual braço fica a tatuagem do Declan?","answers":["direito","braço direito","no braço direito"]},{"id":12,"type":"text","q":"Qual o nome da irmã da Olívia?","answers":["Emily"]},{"id":13,"type":"text","q":"Por quantos minutos o Dex diz que o cérebro humano vive para revisitar os melhores minutos da sua vida?","answers":["7","7 minutos","por 7 minutos"]},{"id":14,"type":"text","q":"“Não é um segredo que nós estamos transando, mas eu não assumiria um homem rodado principalmente quando não temos nada sério.” De quem é essa frase?","answers":["Charlotte","Char"]},{"id":15,"type":"text","q":"Qual foi a tatuagem de henna que o Declan fez na Charlotte?","answers":["mariposa","uma mariposa"]},{"id":16,"type":"text","q":"Quem disse “Você fica linda quando está me desprezando”?","answers":["Declan"]},{"id":17,"type":"text","q":"Quem disse “Uma garota bonita que pode me matar? Não vejo nenhuma desvantagem.”?","answers":["Declan"]},{"id":18,"type":"text","q":"De quem é o pensamento “Eu queimaria o mundo inteiro. E ainda a carregaria no colo, por cima das cinzas.”?","answers":["Declan"]},{"id":19,"type":"text","q":"Quem chama a Melissa de “pequena praga”?","answers":["Phantasma"]},{"id":20,"type":"boolean","q":"Quando Killian era adolescente, ele se cortou para fazer Melissa notá-lo e obrigou Declan a conseguir que apenas os pais dela cuidassem dele.","answer":true},{"id":21,"type":"boolean","q":"Quando o pai de Declan causou um vexame em um evento, Killian e Dex caíram no soco de propósito para tirar o foco da mídia dele.","answer":true},{"id":22,"type":"boolean","q":"Foi Olívia quem deu a ideia de fazer um pacto com sangue e contar segredos para unir ainda mais o grupo, transformando-os nos Cisnes de New York.","answer":false},{"id":23,"type":"boolean","q":"Zuri é, na verdade, o 8º Cisne, e Caspian foi apenas uma forma de desviar o assunto dela.","answer":false},{"id":24,"type":"boolean","q":"Reid teve uma overdose porque usava drogas e inventou que Caspian o havia drogado apenas para se safar e continuar jogando.","answer":false},{"id":25,"type":"text","q":"Como era o nome da babá da Melissa?","answers":["Flora"]},{"id":26,"type":"text","q":"Como Killian chamava Melissa quando queria irritá-la?","answers":["mudinha"]},{"id":27,"type":"text","q":"Quem escreveu o bilhete e deixou a garrafa de bebida para o pai do Declan, em Abutre?","answers":["Melissa"]},{"id":28,"type":"boolean","q":"Na festa em que Killian e Lara se beijaram, Reid viu tudo e levou Lara nos ombros embora, com ciúmes.","answer":true},{"id":29,"type":"boolean","q":"Quando Olívia beijou Dex com batom de canela e ele começou a ter uma crise alérgica, ela foi embora e o deixou lá morrendo sozinho.","answer":false},{"id":30,"type":"boolean","q":"Quando Charlotte descobre toda a verdade por trás dos Cisnes, ela finge não saber de nada até Declan estar pronto para contar tudo.","answer":false},{"id":31,"type":"text","q":"Quem disse “Eu disse que sei que você tem namorado, não disse que me importo com isso.”?","answers":["Killian"]},{"id":32,"type":"boolean","q":"Quando os meninos descobrem que o pai de Reid tinha uma das armas que poderia ter sido usada para atirar em Killian, Reid descobre que o pai dele a vendeu para os pais da Melissa.","answer":true},{"id":33,"type":"boolean","q":"Quando Olívia pergunta a Dex por que ele matou o irmão dela, ele conta o verdadeiro motivo, e os dois se afastam por outra coisa.","answer":false},{"id":34,"type":"boolean","q":"Toda vez que alguém pergunta a Zuri qual é a profissão dos pais dela, ela diz algo diferente e nunca conta o que eles realmente fazem.","answer":true},{"id":35,"type":"boolean","q":"Chuck namorou Olívia por meses e nunca a beijou nenhuma vez.","answer":true},{"id":36,"type":"boolean","q":"Chuck sofre um acidente de carro enquanto estava indo para uma festa.","answer":false},{"id":37,"type":"boolean","q":"Depois que Olívia foi embora, Dex ficou com várias meninas como uma forma de superá-la.","answer":false},{"id":38,"type":"text","q":"Quem disse “Eu sou como a Tinkerbell quando alguém diz que não acredita em fadas. Se continuar chamando outro homem de gostoso, eu morro.”?","answers":["Killian"]},{"id":39,"type":"boolean","q":"Reid usa o número 9 porque é o número favorito de Lara.","answer":true},{"id":40,"type":"boolean","q":"Dex fica bêbado depois que Olívia vai embora, e todos os meninos acabam bebendo com ele e cantando “Bad Day”.","answer":true},{"id":41,"type":"boolean","q":"Durante o aniversário de Zuri em Abutre, Declan faz um show de drones como presente para ela.","answer":false},{"id":42,"type":"text","q":"Reid tinha um melhor amigo que jogava futebol americano com ele quando eram crianças. Qual o nome dele?","answers":["Kade"]}];
@@ -110,7 +165,7 @@ if(qs.has("reset"))sessionStorage.removeItem(STATE_KEY);
 const SITE_ROOT=location.hostname.endsWith("github.io")?"/arquivoconfidencial/":"./";
 const $=id=>document.getElementById(id);
 const card=$("card"),questionEl=$("question"),typeLabel=$("typeLabel"),answerZone=$("answerZone"),
-      feedback=$("feedback"),meta=$("meta"),curtain=$("curtain"),bits=$("bits");
+      feedback=$("feedback"),meta=$("meta"),curtain=$("curtain");
 const pips=[...document.querySelectorAll(".pip")];
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
 function fresh(){
@@ -204,9 +259,9 @@ function finish(){
   sessionStorage.setItem("phantasma_quiz_acertos",String(state.correct));
   sessionStorage.setItem("phantasma_quiz_erros",String(state.errors));
   sessionStorage.setItem("phantasma_quiz_perguntas_vistas",String(state.seen.length));
-  bits.textContent=Array.from({length:420},()=>Math.random()<.5?"0":"1").join("");
+  /* V82: transição limpa. Nenhum binário é gerado. */
   curtain.classList.add("show");
-  setTimeout(()=>location.href=SITE_ROOT+"pistas.html",1100);
+  setTimeout(()=>location.href=SITE_ROOT+"pistas.html",1050);
 }
 updatePips();
 if(state.finished){state=fresh();save()}

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#030604">
-<title>Painel de Pistas // PHANTASMA // V80</title>
+<title>Painel de Pistas // PHANTASMA // V83</title>
 <style>
 :root{
   --bg:#030604;
@@ -850,6 +850,34 @@ main{
   }
 }
 
+
+/* =========================================================
+   V83 // MATRIX DA ENTRADA DO PAINEL RESTAURADA
+   ========================================================= */
+#entryCurtain canvas{
+  display:block !important;
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+}
+#entryCurtain{
+  background:#020503 !important;
+}
+#entryCurtain::before{
+  content:none !important;
+  animation:none !important;
+}
+.entryText{
+  animation:none !important;
+}
+
+@media(max-width:760px){
+  #entryCurtain canvas{
+    display:block !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1554,14 +1582,6 @@ const ecanvas=$("entryCanvas");
 const ectx=ecanvas.getContext("2d");
 
 function runEntry(){
-  /* V80: entrada limpa em qualquer viewport.
-     O canvas de Matrix da cortina não é mais executado. */
-  setTimeout(()=>{
-    entry.classList.add("hide");
-    setTimeout(()=>entry.remove(),520);
-  },760);
-  return;
-
   const dpr=Math.min(devicePixelRatio||1,1.5);
   ecanvas.width=Math.floor(innerWidth*dpr);
   ecanvas.height=Math.floor(innerHeight*dpr);
