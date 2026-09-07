@@ -2,22 +2,1005 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PHANTASMA // ARQUIVO FINAL</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#020403">
+<title>PHANTASMA // ARQUIVO FINAL // V77</title>
 <style>
-html,body{margin:0;min-height:100%;background:#020403;color:#eaf4ed}
-body{min-height:100dvh;display:grid;place-items:center;padding:24px;font-family:"Courier New",monospace}
-main{width:min(760px,100%);text-align:center}
-small{color:#647069;letter-spacing:.18em}
-h1{font-size:clamp(36px,8vw,82px);margin:22px 0 12px}
-p{color:#89958e;line-height:1.7}
+:root{
+  --bg:#020403;
+  --fg:#e8efe9;
+  --soft:#a8b4ac;
+  --muted:#68756d;
+  --line:rgba(220,235,226,.10);
+  --green:#8fd2a6;
+  --red:#d96f78;
+  --amber:#c9b77f;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;min-height:100%;
+  background:var(--bg);color:var(--fg);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+body{
+  min-height:100dvh;
+  overflow-x:hidden;
+  background:
+    radial-gradient(circle at 50% -12%,rgba(82,119,96,.10),transparent 34%),
+    linear-gradient(#060906,#020302 76%);
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+  opacity:.05;
+  background:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle at center,transparent 25%,rgba(0,0,0,.28) 68%,rgba(0,0,0,.82) 100%);
+}
+button,input{font:inherit}
+.stage{
+  min-height:100dvh;
+  display:grid;
+  place-items:center;
+  padding:16px;
+}
+.screen{
+  display:none;
+  width:min(1040px,100%);
+  opacity:0;
+}
+.screen.show{
+  display:block;
+  animation:screenIn .75s cubic-bezier(.2,.8,.2,1) .08s both;
+}
+@keyframes screenIn{
+  from{opacity:0;transform:translateY(8px);filter:blur(5px)}
+  to{opacity:1;transform:none;filter:none}
+}
+#veil{
+  position:fixed;inset:0;z-index:90;
+  background:#020302;opacity:1;pointer-events:none;
+  transition:opacity .55s ease;
+}
+#veil.hide{opacity:0}
+#veil.on{opacity:1}
+
+.shell{
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--line);
+  background:rgba(6,10,7,.92);
+  box-shadow:0 32px 120px rgba(0,0,0,.62);
+}
+.head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:18px;
+  min-height:42px;
+  padding:10px 14px;
+  border-bottom:1px solid rgba(220,235,226,.065);
+  color:#6b776f;
+  font-size:9px;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+}
+.head strong{
+  color:#88a18f;
+  font-weight:600;
+}
+.body{
+  padding:clamp(30px,5vw,58px);
+}
+
+/* decode */
+.decode-title{
+  min-height:112px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:clamp(6px,1.15vw,14px);
+  margin:8px auto 22px;
+  max-width:94%;
+  white-space:nowrap;
+}
+.reel{
+  min-width:.68em;
+  height:1.17em;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  color:#e6ede8;
+  font:650 clamp(31px,5.5vw,58px)/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  transition:transform .22s ease,opacity .22s ease,color .22s ease;
+}
+.reel span{display:block}
+.reel.kick span{
+  animation:reelKick .2s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes reelKick{
+  from{transform:translateY(-95%);opacity:.05;filter:blur(7px)}
+  to{transform:none;opacity:1;filter:none}
+}
+.reel.space{margin-left:clamp(2px,.6vw,8px)}
+.reel.up{transform:translateY(-2px)}
+.reel.down{transform:translateY(2px)}
+
+.date-line{
+  min-height:44px;
+  display:flex;
+  justify-content:center;
+  gap:clamp(5px,.9vw,10px);
+  color:#87948c;
+  font:500 clamp(20px,3.2vw,31px)/1 ui-monospace,monospace;
+  letter-spacing:.05em;
+  margin-bottom:28px;
+}
+.date-line .digit{min-width:.63em;text-align:center}
+.date-line .dot{opacity:.34}
+
+.diagnostics{
+  width:min(690px,90%);
+  margin:0 auto 24px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  border-top:1px solid rgba(220,235,226,.055);
+  border-bottom:1px solid rgba(220,235,226,.055);
+}
+.diag{
+  padding:10px 13px;
+  border-right:1px solid rgba(220,235,226,.04);
+}
+.diag:last-child{border-right:0}
+.diag small{
+  display:block;
+  color:#56625b;
+  font-size:7px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.diag strong{
+  display:block;
+  color:#87948c;
+  font:500 8px/1.2 ui-monospace,monospace;
+  letter-spacing:.08em;
+}
+.status{
+  text-align:center;
+  color:#839087;
+  font-size:10px;
+  letter-spacing:.15em;
+}
+.progress{
+  width:min(550px,78%);
+  height:3px;
+  margin:16px auto 0;
+  background:rgba(143,210,166,.07);
+  overflow:hidden;
+}
+.progress i{
+  display:block;
+  width:0;height:100%;
+  background:#8cbda0;
+}
+.pct{
+  margin-top:8px;
+  text-align:center;
+  color:#617067;
+  font-size:9px;
+}
+.log{
+  min-height:56px;
+  width:min(690px,90%);
+  margin:20px auto 0;
+  padding-top:11px;
+  border-top:1px solid rgba(220,235,226,.055);
+  color:#647168;
+  font:500 8px/1.75 ui-monospace,monospace;
+  letter-spacing:.05em;
+}
+.log div{animation:logIn .25s ease both}
+.log .good{color:#82bd96}
+.log .warn{color:#c3b275}
+@keyframes logIn{
+  from{opacity:0;transform:translateY(3px)}
+  to{opacity:1;transform:none}
+}
+
+/* final locking */
+.shell.locking{
+  border-color:rgba(143,210,166,.20);
+  box-shadow:0 32px 120px rgba(0,0,0,.64),0 0 38px rgba(143,210,166,.025);
+}
+.reel.locked{
+  color:#eff6f1;
+  text-shadow:0 0 18px rgba(143,210,166,.04);
+}
+.lock-pulse{
+  animation:lockPulse .48s ease both;
+}
+@keyframes lockPulse{
+  0%{filter:brightness(1);transform:scale(1)}
+  40%{filter:brightness(1.65);transform:scale(1.025)}
+  100%{filter:none;transform:none}
+}
+
+/* reveal */
+#revealScreen{
+  width:100%;
+  min-height:calc(100dvh - 32px);
+}
+#revealScreen.show{display:grid;place-items:center}
+.reveal-inner{
+  width:min(1080px,94vw);
+  text-align:center;
+}
+.reveal-kicker{
+  color:#657269;
+  font-size:9px;
+  letter-spacing:.19em;
+  text-transform:uppercase;
+  opacity:0;
+}
+.reveal-title{
+  margin:30px 0 0;
+  font-size:clamp(58px,12vw,148px);
+  line-height:.82;
+  font-weight:730;
+  letter-spacing:-.075em;
+  word-break:break-word;
+  opacity:0;
+  transform:translateY(12px);
+  filter:blur(7px);
+}
+.reveal-date{
+  margin-top:30px;
+  color:#a0aca4;
+  font:500 clamp(22px,4vw,42px)/1 ui-monospace,monospace;
+  letter-spacing:.12em;
+  opacity:0;
+}
+.reveal-note{
+  margin:30px auto 0;
+  color:#68756d;
+  max-width:680px;
+  font-size:12px;
+  line-height:1.7;
+  opacity:0;
+}
+.reveal-action{
+  margin-top:36px;
+  opacity:0;
+}
+#revealScreen.play .reveal-kicker{animation:fadeUp .7s ease .2s both}
+#revealScreen.play .reveal-title{animation:revealTitle 1.2s cubic-bezier(.15,.85,.2,1) .75s both}
+#revealScreen.play .reveal-date{animation:fadeUp .8s ease 1.9s both}
+#revealScreen.play .reveal-note{animation:fadeUp .8s ease 2.65s both}
+#revealScreen.play .reveal-action{animation:fadeUp .7s ease 3.4s both}
+@keyframes fadeUp{
+  to{opacity:1;transform:none;filter:none}
+}
+@keyframes revealTitle{
+  0%{opacity:0;transform:translateY(18px) scale(.98);filter:blur(9px)}
+  65%{opacity:.9;filter:blur(1px)}
+  100%{opacity:1;transform:none;filter:none}
+}
+
+/* registration */
+#registerScreen{
+  width:100%;
+  min-height:calc(100dvh - 32px);
+}
+#registerScreen.show{display:grid;place-items:center}
+.register-wrap{
+  width:min(780px,92vw);
+}
+.register-kicker{
+  color:#657269;
+  font-size:9px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  margin-bottom:20px;
+}
+.register-title{
+  margin:0;
+  font-size:clamp(38px,7vw,74px);
+  line-height:.98;
+  font-weight:690;
+  letter-spacing:-.055em;
+}
+.register-copy{
+  max-width:640px;
+  margin-top:20px;
+  color:#8c9890;
+  line-height:1.7;
+  font-size:14px;
+}
+.form{
+  margin-top:38px;
+}
+.field{
+  margin-top:22px;
+}
+.field label{
+  display:block;
+  margin-bottom:7px;
+  color:#616d65;
+  font-size:8px;
+  letter-spacing:.17em;
+  text-transform:uppercase;
+}
+.field input{
+  width:100%;
+  min-height:50px;
+  padding:10px 1px;
+  border:0;
+  border-bottom:1px solid rgba(220,235,226,.18);
+  background:transparent;
+  color:#e6eee8;
+  outline:0;
+  font-size:16px;
+}
+.field input:focus{
+  border-bottom-color:rgba(143,210,166,.55);
+}
+.privacy{
+  margin-top:24px;
+  color:#556159;
+  font-size:9px;
+  line-height:1.65;
+}
+.action{
+  margin-top:28px;
+  min-height:46px;
+  padding:0 19px;
+  border:1px solid rgba(143,210,166,.30);
+  background:#050806;
+  color:#d4e4d9;
+  cursor:pointer;
+  font:650 10px/1 ui-monospace,monospace;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+}
+.action:hover{
+  border-color:var(--green);
+  background:rgba(143,210,166,.055);
+}
+.action:disabled{
+  opacity:.45;
+  cursor:default;
+}
+.register-status{
+  min-height:26px;
+  margin-top:14px;
+  color:#76837a;
+  font-size:10px;
+  line-height:1.6;
+}
+.register-status.bad{color:#d78389}
+.register-status.good{color:#8ccca2}
+
+/* completion */
+.complete{
+  text-align:center;
+}
+.complete-id{
+  margin-top:28px;
+  color:#dce7df;
+  font:600 clamp(24px,5vw,44px)/1 ui-monospace,monospace;
+  letter-spacing:.10em;
+}
+.complete-copy{
+  margin-top:24px;
+  color:#7b887f;
+  line-height:1.7;
+  font-size:13px;
+}
+
+.preview{
+  position:fixed;left:12px;bottom:12px;z-index:80;
+  display:none;
+  padding:7px 9px;
+  border:1px solid rgba(201,183,127,.20);
+  background:rgba(4,6,4,.82);
+  color:#ae9e6d;
+  font:500 8px/1 ui-monospace,monospace;
+  letter-spacing:.10em;
+}
+.preview.show{display:block}
+
+@media(max-width:650px){
+  .stage{padding:9px}
+  .body{padding:26px 14px}
+  .decode-title{gap:4px;max-width:98%}
+  .reel{font-size:clamp(24px,7.2vw,34px);min-width:.58em}
+  .diagnostics{grid-template-columns:1fr;width:94%}
+  .diag{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    border-right:0;border-bottom:1px solid rgba(220,235,226,.035);
+  }
+  .diag:last-child{border-bottom:0}
+  .diag small{margin:0}
+  .reveal-title{font-size:clamp(50px,17vw,95px)}
+}
 </style>
 </head>
 <body>
-<main>
-<small>ACESSO CONCEDIDO // ARQUIVO FINAL</small>
-<h1>EM PREPARAÇÃO.</h1>
-<p>Esta é apenas a saída temporária da V62.<br>A revelação final será construída na Parte V.</p>
+<div id="veil"></div>
+<div class="preview" id="previewBadge">MODO PREVIEW // CONFIGURE TÍTULO E DATA</div>
+
+<main class="stage">
+
+<section class="screen show" id="decodeScreen">
+  <div class="shell" id="decodeShell">
+    <div class="head">
+      <span>ARQUIVO FINAL // ACESSO CONCEDIDO</span>
+      <strong id="decodeLed">CANAL ESTÁVEL</strong>
+    </div>
+
+    <div class="body">
+      <div class="decode-title" id="decodeTitle"></div>
+      <div class="date-line" id="decodeDate"></div>
+
+      <div class="diagnostics">
+        <div class="diag">
+          <small>BLOCO</small>
+          <strong id="diagBlock">01 / 10</strong>
+        </div>
+        <div class="diag">
+          <small>ASSINATURA</small>
+          <strong id="diagSignature">ANALISANDO</strong>
+        </div>
+        <div class="diag">
+          <small>ÍNDICE</small>
+          <strong id="diagIndex">RECONSTRUINDO</strong>
+        </div>
+      </div>
+
+      <div class="status" id="decodeStatus">DECODIFICANDO...</div>
+      <div class="progress"><i id="decodeFill"></i></div>
+      <div class="pct" id="decodePct">0%</div>
+      <div class="log" id="decodeLog"></div>
+    </div>
+  </div>
+</section>
+
+<section class="screen" id="revealScreen">
+  <div class="reveal-inner">
+    <div class="reveal-kicker">ARQUIVO FINAL // ABERTO</div>
+    <div class="reveal-title" id="finalTitle"></div>
+    <div class="reveal-date" id="finalDate"></div>
+    <div class="reveal-note">Você chegou até onde eu queria que chegasse.</div>
+    <div class="reveal-action"><button class="action" id="revealNext">CONTINUAR</button></div>
+  </div>
+</section>
+
+<section class="screen" id="registerScreen">
+  <div class="register-wrap" id="registerWrap">
+    <div class="register-kicker">SESSÃO // ENCERRAMENTO</div>
+    <h1 class="register-title">Você chegou até o fim.</h1>
+    <p class="register-copy">Isso merece ser registrado.</p>
+
+    <form class="form" id="registerForm">
+      <div class="field">
+        <label for="name">NOME</label>
+        <input id="name" name="name" required maxlength="80" autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label for="email">E-MAIL</label>
+        <input id="email" name="email" type="email" required maxlength="120" autocomplete="email">
+      </div>
+
+      <div class="field">
+        <label for="social">@ / PERFIL <span style="opacity:.45">(opcional)</span></label>
+        <input id="social" name="social" maxlength="120" autocomplete="off">
+      </div>
+
+      <div class="privacy">
+        Os dados informados serão utilizados para validar este registro de participação
+        e para eventual contato relacionado a esta experiência.
+      </div>
+
+      <button class="action" id="registerBtn" type="submit">REGISTRAR CONCLUSÃO</button>
+      <div class="register-status" id="registerStatus"></div>
+    </form>
+  </div>
+</section>
+
 </main>
+
+<script>
+"use strict";
+
+/* =========================================================
+   CONFIGURAÇÃO FINAL
+   =========================================================
+   SUBSTITUA SOMENTE ESTES 3 VALORES QUANDO FOR PUBLICAR.
+*/
+const FINAL_CONFIG = {
+  title: "",              // ex.: "CORVO"
+  date: "",               // ex.: "14.11.2026"
+  formEndpoint: ""        // URL do Google Apps Script (deixar vazio enquanto testa)
+};
+
+/* ========================================================= */
+
+const PREVIEW_TITLE = "ARQUIVO FINAL";
+const PREVIEW_DATE  = "00.00.0000";
+
+const qs = new URLSearchParams(location.search);
+const previewMode = qs.get("preview")==="1";
+const completed = sessionStorage.getItem("phantasma_tiro_concluido")==="1";
+
+if(!completed && !previewMode){
+  location.replace("jogo/");
+}
+
+const $=id=>document.getElementById(id);
+const screens=[...document.querySelectorAll(".screen")];
+const veil=$("veil");
+
+const decodeShell=$("decodeShell");
+const decodeTitle=$("decodeTitle");
+const decodeDate=$("decodeDate");
+const decodeStatus=$("decodeStatus");
+const decodeFill=$("decodeFill");
+const decodePct=$("decodePct");
+const decodeLed=$("decodeLed");
+const decodeLog=$("decodeLog");
+const diagBlock=$("diagBlock");
+const diagSignature=$("diagSignature");
+const diagIndex=$("diagIndex");
+
+const finalTitle=$("finalTitle");
+const finalDate=$("finalDate");
+const previewBadge=$("previewBadge");
+
+const TITLE=(FINAL_CONFIG.title||PREVIEW_TITLE).trim();
+const DATE=(FINAL_CONFIG.date||PREVIEW_DATE).trim();
+
+if(!FINAL_CONFIG.title || !FINAL_CONFIG.date){
+  previewBadge.classList.add("show");
+}
+
+function wait(ms){return new Promise(r=>setTimeout(r,ms))}
+
+function show(id){
+  screens.forEach(s=>{
+    const active=s.id===id;
+    s.classList.toggle("show",active);
+    if(!active)s.classList.remove("play");
+  });
+  const target=$(id);
+  if(target && id==="revealScreen"){
+    target.classList.remove("play");
+    void target.offsetWidth;
+    target.classList.add("play");
+  }
+}
+
+async function transitionTo(id,hold=130){
+  veil.classList.add("on");
+  await wait(500+hold);
+  show(id);
+  await wait(80);
+  veil.classList.remove("on");
+  await wait(540);
+}
+
+setTimeout(()=>veil.classList.add("hide"),140);
+
+function log(text,kind=""){
+  const d=document.createElement("div");
+  d.className=kind;
+  d.textContent=text;
+  decodeLog.appendChild(d);
+  while(decodeLog.children.length>3){
+    decodeLog.firstElementChild.remove();
+  }
+}
+
+const GLYPHS="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@$%&?*";
+const LENGTHS=[5,7,8,3,10,4,9,6,11];
+let titleTimer=null;
+let dateTimers=[];
+let lastLen=0;
+
+function rndChar(){
+  return GLYPHS[(Math.random()*GLYPHS.length)|0];
+}
+
+function diagnostic(len){
+  if(len<=4){
+    diagSignature.textContent="ESTRUTURA CURTA";
+    diagIndex.textContent="REINDEXANDO";
+  }else if(len>=9){
+    diagSignature.textContent="ASSINATURA EXPANDIDA";
+    diagIndex.textContent="RECALCULANDO";
+  }else if(len<=6){
+    diagSignature.textContent="PADRÃO INSTÁVEL";
+    diagIndex.textContent="TESTANDO VARIANTE";
+  }else{
+    diagSignature.textContent="ASSINATURA MUTÁVEL";
+    diagIndex.textContent="RECONSTRUINDO";
+  }
+  diagBlock.textContent=String(Math.min(10,Math.max(1,len))).padStart(2,"0")+" / 10";
+}
+
+function buildRandomTitle(len){
+  decodeTitle.innerHTML="";
+
+  for(let i=0;i<len;i++){
+    const reel=document.createElement("div");
+    reel.className="reel";
+
+    if(i>0 && Math.random()>.76)reel.classList.add("space");
+    if(Math.random()>.72)reel.classList.add(Math.random()>.5?"up":"down");
+
+    const span=document.createElement("span");
+    span.textContent=rndChar();
+
+    reel.appendChild(span);
+    decodeTitle.appendChild(reel);
+
+    setTimeout(()=>{
+      reel.classList.add("kick");
+      span.textContent=rndChar();
+    },Math.random()*320);
+  }
+
+  diagnostic(len);
+}
+
+function startRandomTitle(){
+  function morph(){
+    let len;
+    do{
+      len=LENGTHS[(Math.random()*LENGTHS.length)|0];
+    }while(len===lastLen);
+
+    lastLen=len;
+    buildRandomTitle(len);
+  }
+
+  morph();
+  titleTimer=setInterval(morph,880);
+}
+
+function buildRandomDate(){
+  decodeDate.innerHTML="";
+  dateTimers.forEach(clearInterval);
+  dateTimers=[];
+
+  const spec=["d","d",".","d","d",".","d","d","d","d"];
+
+  spec.forEach(x=>{
+    if(x==="."){
+      const dot=document.createElement("span");
+      dot.className="dot";
+      dot.textContent=".";
+      decodeDate.appendChild(dot);
+    }else{
+      const digit=document.createElement("span");
+      digit.className="digit";
+      digit.textContent=(Math.random()*10)|0;
+      decodeDate.appendChild(digit);
+
+      dateTimers.push(
+        setInterval(()=>{
+          digit.textContent=(Math.random()*10)|0;
+        },90+Math.random()*120)
+      );
+    }
+  });
+}
+
+function stopRandom(){
+  clearInterval(titleTimer);
+  dateTimers.forEach(clearInterval);
+  dateTimers=[];
+}
+
+function progressTo99(duration){
+  return new Promise(resolve=>{
+    const start=performance.now();
+
+    function frame(now){
+      const p=Math.min(1,(now-start)/duration);
+      const eased=1-Math.pow(1-p,2.5);
+      const value=Math.min(99,Math.round(eased*99));
+
+      decodeFill.style.width=value+"%";
+      decodePct.textContent=value+"%";
+
+      if(value<28){
+        decodeStatus.textContent="DECODIFICANDO...";
+      }else if(value<62){
+        decodeStatus.textContent="RECONSTRUINDO ESTRUTURA...";
+      }else if(value<91){
+        decodeStatus.textContent="VALIDANDO ASSINATURA...";
+      }else{
+        decodeStatus.textContent="FINALIZANDO...";
+      }
+
+      if(p<1)requestAnimationFrame(frame);
+      else resolve();
+    }
+
+    requestAnimationFrame(frame);
+  });
+}
+
+function titleTokens(value){
+  return [...value.toUpperCase()];
+}
+
+function buildFinalTitleStructure(){
+  decodeTitle.innerHTML="";
+  const chars=titleTokens(TITLE);
+
+  chars.forEach(ch=>{
+    if(ch===" "){
+      const gap=document.createElement("div");
+      gap.style.width="clamp(12px,2vw,24px)";
+      decodeTitle.appendChild(gap);
+      return;
+    }
+
+    const reel=document.createElement("div");
+    reel.className="reel";
+
+    const span=document.createElement("span");
+    span.textContent=rndChar();
+
+    reel.appendChild(span);
+    decodeTitle.appendChild(reel);
+  });
+}
+
+function buildFinalDateStructure(){
+  decodeDate.innerHTML="";
+
+  [...DATE].forEach(ch=>{
+    const s=document.createElement("span");
+
+    if(ch==="."){
+      s.className="dot";
+      s.textContent=".";
+    }else{
+      s.className="digit";
+      s.textContent=(Math.random()*10)|0;
+    }
+
+    decodeDate.appendChild(s);
+  });
+}
+
+async function lockFinal(){
+  stopRandom();
+
+  decodeShell.classList.add("locking");
+  decodeLed.textContent="CANAL ESTÁVEL";
+  decodeStatus.textContent="ASSINATURA CONFIRMADA";
+  diagBlock.textContent="10 / 10";
+  diagSignature.textContent="CONFIRMADA";
+  diagIndex.textContent="FINAL";
+  log("[SISTEMA] correspondência confirmada.","good");
+
+  buildFinalTitleStructure();
+  buildFinalDateStructure();
+
+  const targetTitle=titleTokens(TITLE).filter(ch=>ch!==" ");
+  const titleReels=[...decodeTitle.querySelectorAll(".reel")];
+
+  for(let i=0;i<titleReels.length;i++){
+    const reel=titleReels[i];
+    const span=reel.querySelector("span");
+
+    for(let j=0;j<3;j++){
+      span.textContent=rndChar();
+      reel.classList.remove("kick");
+      void reel.offsetWidth;
+      reel.classList.add("kick");
+      await wait(70);
+    }
+
+    span.textContent=targetTitle[i]||" ";
+    reel.classList.add("locked","lock-pulse");
+    await wait(120);
+  }
+
+  const dateSpans=[...decodeDate.children];
+  const targetDate=[...DATE];
+
+  for(let i=0;i<dateSpans.length;i++){
+    if(targetDate[i]===".")continue;
+
+    for(let j=0;j<2;j++){
+      dateSpans[i].textContent=(Math.random()*10)|0;
+      await wait(45);
+    }
+
+    dateSpans[i].textContent=targetDate[i];
+    await wait(70);
+  }
+
+  decodeFill.style.width="100%";
+  decodePct.textContent="100%";
+  decodeStatus.textContent="DECODIFICAÇÃO CONCLUÍDA";
+  decodeLed.textContent="ARQUIVO ABERTO";
+  log("[SISTEMA] arquivo liberado.","good");
+
+  await wait(1800);
+
+  finalTitle.textContent=TITLE;
+  finalDate.textContent=DATE;
+
+  await transitionTo("revealScreen",240);
+}
+
+async function runDecode(){
+  decodeLog.innerHTML="";
+  log("[SISTEMA] arquivo final recebido.","good");
+  startRandomTitle();
+  buildRandomDate();
+
+  setTimeout(()=>log("[SISTEMA] reconstruindo referência."),1000);
+  setTimeout(()=>log("[SISTEMA] assinatura permanece variável."),3100);
+  setTimeout(()=>log("[SISTEMA] comparando estruturas candidatas."),5400);
+
+  await progressTo99(7600);
+
+  decodeFill.style.width="99%";
+  decodePct.textContent="99%";
+  decodeStatus.textContent="DECODIFICAÇÃO // 99%";
+  decodeLed.textContent="AGUARDANDO";
+  diagBlock.textContent="10 / 10";
+  diagIndex.textContent="VALIDAÇÃO FINAL";
+  log("[SISTEMA] aguardando confirmação do último bloco.");
+
+  /* O público espera outra sabotagem. */
+  await wait(1450);
+
+  decodeStatus.textContent="VALIDANDO...";
+  diagSignature.textContent="ESTÁVEL";
+  decodeLed.textContent="CANAL ESTÁVEL";
+  log("[SISTEMA] nenhuma inconsistência detectada.","good");
+
+  await wait(850);
+
+  await lockFinal();
+}
+
+/* registration */
+const revealNext=$("revealNext");
+const registerForm=$("registerForm");
+const registerBtn=$("registerBtn");
+const registerStatus=$("registerStatus");
+const registerWrap=$("registerWrap");
+
+revealNext.addEventListener("click",()=>{
+  transitionTo("registerScreen",170);
+});
+
+function makeSessionId(){
+  const alphabet="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let s="PH-";
+  for(let i=0;i<7;i++){
+    s+=alphabet[(Math.random()*alphabet.length)|0];
+  }
+  return s;
+}
+
+function getNumber(key){
+  const n=Number(sessionStorage.getItem(key));
+  return Number.isFinite(n)?n:0;
+}
+
+function buildPayload(formData,id){
+  return {
+    version:"V77",
+    session_id:id,
+    completed_at:new Date().toISOString(),
+
+    name:String(formData.get("name")||"").trim(),
+    email:String(formData.get("email")||"").trim(),
+    social:String(formData.get("social")||"").trim(),
+
+    quiz_errors:getNumber("phantasma_quiz_erros"),
+    quiz_questions_seen:getNumber("phantasma_quiz_perguntas_vistas"),
+
+    panel_errors:getNumber("phantasma_painel_erros"),
+    panel_revealed:getNumber("phantasma_painel_reveladas"),
+    extra_clues:getNumber("phantasma_pistas_extras"),
+    shooting_penalty_seconds:getNumber("phantasma_penalidade_tiro_segundos"),
+
+    chosen_name:sessionStorage.getItem("phantasma_protegido")||"",
+    chosen_id:sessionStorage.getItem("phantasma_protegido_id")||"",
+
+    time_before_roulette:getNumber("phantasma_tempo_antes_roleta"),
+    roulette_bonus:getNumber("phantasma_bonus_roleta"),
+    roulette_used:sessionStorage.getItem("phantasma_roleta_usada")==="1",
+
+    shooting_initial_time:getNumber("phantasma_tiro_tempo_inicial"),
+    shooting_attempts:getNumber("phantasma_tiro_tentativas"),
+    shooting_failures:getNumber("phantasma_tiro_falhas"),
+    shooting_completed:sessionStorage.getItem("phantasma_tiro_concluido")==="1"
+  };
+}
+
+async function sendRecord(payload){
+  if(!FINAL_CONFIG.formEndpoint){
+    /* Preview/local test. Nada sai do navegador. */
+    return {preview:true};
+  }
+
+  await fetch(FINAL_CONFIG.formEndpoint,{
+    method:"POST",
+    mode:"no-cors",
+    headers:{
+      "Content-Type":"text/plain;charset=utf-8"
+    },
+    body:JSON.stringify(payload)
+  });
+
+  return {preview:false};
+}
+
+function showComplete(id,preview){
+  registerWrap.innerHTML=`
+    <div class="complete">
+      <div class="register-kicker">SESSÃO // ENCERRADA</div>
+      <h1 class="register-title">Registro concluído.</h1>
+      <div class="complete-id">${id}</div>
+      <div class="complete-copy">
+        ${preview
+          ?"MODO TESTE // nenhum dado foi enviado porque o endpoint da planilha ainda não foi configurado."
+          :"Sessão registrada. Guarde este identificador."}
+      </div>
+    </div>
+  `;
+}
+
+registerForm.addEventListener("submit",async e=>{
+  e.preventDefault();
+
+  if(registerBtn.disabled)return;
+
+  registerBtn.disabled=true;
+  registerStatus.className="register-status";
+  registerStatus.textContent="REGISTRANDO SESSÃO...";
+
+  const formData=new FormData(registerForm);
+  const id=sessionStorage.getItem("phantasma_registro_id")||makeSessionId();
+  const payload=buildPayload(formData,id);
+
+  try{
+    const result=await sendRecord(payload);
+
+    sessionStorage.setItem("phantasma_registro_id",id);
+    sessionStorage.setItem("phantasma_registro_enviado","1");
+    sessionStorage.setItem("phantasma_final_concluido","1");
+
+    registerStatus.className="register-status good";
+    registerStatus.textContent="REGISTRO CONFIRMADO.";
+
+    await wait(600);
+    showComplete(id,result.preview);
+  }catch(err){
+    registerBtn.disabled=false;
+    registerStatus.className="register-status bad";
+    registerStatus.textContent="FALHA NO REGISTRO. TENTE NOVAMENTE.";
+  }
+});
+
+runDecode();
+</script>
 </body>
 </html>
