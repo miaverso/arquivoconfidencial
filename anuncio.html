@@ -265,6 +265,26 @@ button,input{font:inherit}
   letter-spacing:.12em;
   opacity:0;
 }
+.reveal-art{
+  width:min(720px,86vw);
+  margin:34px auto 0;
+  opacity:0;
+  transform:translateY(12px);
+  filter:blur(7px);
+}
+.reveal-art img{
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:62vh;
+  object-fit:contain;
+  border:1px solid rgba(220,235,226,.10);
+  background:#040604;
+  box-shadow:0 24px 90px rgba(0,0,0,.55);
+}
+.reveal-art.empty{display:none}
+#revealScreen.play .reveal-art{animation:fadeUp .9s ease 2.65s both}
+
 .reveal-note{
   margin:30px auto 0;
   color:#68756d;
@@ -427,6 +447,11 @@ button,input{font:inherit}
   .diag:last-child{border-bottom:0}
   .diag small{margin:0}
   .reveal-title{font-size:clamp(50px,17vw,95px)}
+  .reveal-art{
+    width:min(100%,92vw);
+    margin-top:28px;
+  }
+  .reveal-art img{max-height:52vh}
 }
 
 /* =========================================================
@@ -555,6 +580,9 @@ button,input{font:inherit}
     <div class="reveal-kicker">ARQUIVO FINAL // ABERTO</div>
     <div class="reveal-title" id="finalTitle"></div>
     <div class="reveal-date" id="finalDate"></div>
+    <div class="reveal-art" id="finalArtWrap">
+      <img id="finalArt" alt="Ilustração final">
+    </div>
     <div class="reveal-note">Você chegou até onde eu queria que chegasse.</div>
     <div class="reveal-action"><button class="action" id="revealNext">CONTINUAR</button></div>
   </div>
@@ -601,12 +629,13 @@ button,input{font:inherit}
 /* =========================================================
    CONFIGURAÇÃO FINAL
    =========================================================
-   SUBSTITUA SOMENTE ESTES 3 VALORES QUANDO FOR PUBLICAR.
+   SUBSTITUA SOMENTE ESTES 4 VALORES QUANDO FOR PUBLICAR.
 */
 const FINAL_CONFIG = {
   title: "CORVO",              // ex.: "CORVO"
-  date: "27.10.2026",               // ex.: "14.11.2026"
-  formEndpoint: "https://script.google.com/macros/s/AKfycbzymd_BTmZyQUEs3cRBEyalHfDyywb44w-JwC9L78EZ8Sc1a7c-YpYMwaJNbVCy844WEQ/exec"        //
+  date: "20.10.2026",               // ex.: "14.11.2026"
+  art: "assets/ilustracao-final.jpg", // caminho da nova ilustração
+  formEndpoint: "https://script.google.com/macros/s/AKfycbzymd_BTmZyQUEs3cRBEyalHfDyywb44w-JwC9L78EZ8Sc1a7c-YpYMwaJNbVCy844WEQ/exec"
 };
 
 /* ========================================================= */
@@ -641,13 +670,22 @@ const diagIndex=$("diagIndex");
 const finalTitle=$("finalTitle");
 addEventListener("resize",()=>requestAnimationFrame(fitDecodeTitle),{passive:true});
 const finalDate=$("finalDate");
+const finalArtWrap=$("finalArtWrap");
+const finalArt=$("finalArt");
 const previewBadge=$("previewBadge");
 
 const TITLE=(FINAL_CONFIG.title||PREVIEW_TITLE).trim();
 const DATE=(FINAL_CONFIG.date||PREVIEW_DATE).trim();
 
-if(!FINAL_CONFIG.title || !FINAL_CONFIG.date){
+if(!FINAL_CONFIG.title || !FINAL_CONFIG.date || !FINAL_CONFIG.art){
   previewBadge.classList.add("show");
+}
+
+if(FINAL_CONFIG.art){
+  finalArt.src=FINAL_CONFIG.art;
+  finalArtWrap.classList.remove("empty");
+}else{
+  finalArtWrap.classList.add("empty");
 }
 
 function wait(ms){return new Promise(r=>setTimeout(r,ms))}
